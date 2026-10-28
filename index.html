@@ -1,0 +1,1023 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>本丸刀帐</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Shippori+Mincho+B1:wght@500;700;800&family=Noto+Sans+SC:wght@400;500;700&family=IBM+Plex+Mono:wght@500&display=swap" media="print" onload="this.media='all'">
+<style>
+/* Layout: 本丸 ledger on pale washi — gold-ruled header plate, sticky filter rail, the 刀帐 as a grid of framed slots; a scroll-like side sheet for one blade. Single light theme by choice. */
+:root{
+  --bg:#f2f0f3; --paper:#fbfaf8; --paper-2:#f6f3ee; --slot-off:#eceaee;
+  --kin:#a88233; --kin-hi:#c9a352; --kin-soft:#f3ead6; --kin-line:#dccb9f;
+  --shu:#b8433a; --sakura:#d9879a; --sakura-soft:#f8e6ea;
+  --ink:#2b2630; --ink-2:#6b6472; --ink-3:#a39dab; --line:#e0dce4;
+  --f-disp:"Shippori Mincho B1","Shippori Mincho","Noto Serif JP","Songti SC",serif;
+  --f-body:"Noto Sans SC","PingFang SC","Hiragino Sans","Microsoft YaHei",sans-serif;
+  --f-num:"Shippori Mincho B1","Shippori Mincho",serif;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{background:var(--bg)}
+body{background-color:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:14px;line-height:1.6;
+  background-image:
+    radial-gradient(ellipse at 50% -10%, rgb(201 163 82 / .16), transparent 55%),
+    radial-gradient(circle at 100% 0, transparent 0 18px, rgb(168 130 51 / .07) 19px 20px, transparent 21px 30px, rgb(168 130 51 / .07) 31px 32px, transparent 33px),
+    radial-gradient(circle at 0 0, transparent 0 18px, rgb(168 130 51 / .07) 19px 20px, transparent 21px 30px, rgb(168 130 51 / .07) 31px 32px, transparent 33px);
+  background-size:auto,64px 32px,64px 32px;background-attachment:fixed,scroll,scroll}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+#petals{position:fixed;inset:0;pointer-events:none;z-index:1}
+.wrap{position:relative;z-index:2;max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:22px 56px}
+
+header.top{position:relative;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:28px;align-items:center;padding:22px 26px;
+  background:linear-gradient(165deg,#fff,var(--paper) 55%,var(--paper-2));
+  border:1px solid var(--kin-line);border-radius:4px;box-shadow:inset 0 0 0 4px var(--paper),inset 0 0 0 5px var(--kin-line),0 8px 24px rgb(80 60 30 / .08)}
+header.top::before,header.top::after{content:"";position:absolute;width:18px;height:18px;border:2px solid var(--kin)}
+header.top::before{top:-1px;left:-1px;border-right:0;border-bottom:0}
+header.top::after{bottom:-1px;right:-1px;border-left:0;border-top:0}
+@media (max-width:760px){header.top{grid-template-columns:1fr;padding:18px}}
+.eyebrow{font-size:12px;letter-spacing:.3em;color:var(--kin)}
+h1{font-family:var(--f-disp);font-weight:800;font-size:clamp(32px,5.4vw,48px);margin:2px 0 12px;letter-spacing:.18em;color:var(--ink)}
+h1 small{font-size:.38em;letter-spacing:.2em;color:var(--kin);margin-left:10px;vertical-align:middle}
+.big{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.big b{font-family:var(--f-num);font-size:44px;font-weight:800;color:var(--kin);font-variant-numeric:tabular-nums;line-height:1}
+.big span{color:var(--ink-2);font-family:var(--f-num)}
+.big em{font-style:normal;font-size:13px;color:var(--shu);border:1px solid currentColor;padding:1px 8px;border-radius:2px}
+.big em:empty{display:none}
+.bar{height:6px;background:var(--slot-off);border-radius:1px;overflow:hidden;margin-top:10px}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--kin-hi),var(--kin));transition:width .5s}
+.artsum{font-size:13px;color:var(--ink-2);margin-top:8px}
+.artsum b{font-family:var(--f-num);color:var(--sakura);font-weight:700}
+.save{font-size:12px;color:var(--ink-3);margin-top:4px}
+.acct{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
+.meters{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:460px){.meters{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.meter{cursor:pointer;background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:8px 10px;text-align:left;color:inherit;font:inherit;transition:border-color .15s,background .15s}
+.meter:hover{border-color:var(--kin-line)}
+.meter .l{display:flex;justify-content:space-between;align-items:baseline}
+.meter .l b{font-family:var(--f-disp);font-weight:700;font-size:15px;letter-spacing:.08em}
+.meter .l span{font-family:var(--f-num);font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.meter .bar{height:3px;margin-top:6px}
+.meter[aria-pressed="true"]{border-color:var(--kin);background:var(--kin-soft)}
+.meter[aria-pressed="true"] .l b{color:var(--kin)}
+:focus-visible{outline:2px solid var(--kin);outline-offset:2px}
+
+.filters{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:18px;padding-block:10px;
+  background:linear-gradient(var(--bg) 82%,rgb(242 240 243 / 0))}
+.filters input,.filters select{font:inherit;color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:2px;padding:7px 10px;min-width:0}
+.filters input::placeholder{color:var(--ink-3)}
+.filters input{flex:1 1 180px}
+.seg{display:inline-flex;flex-wrap:wrap;border:1px solid var(--line);border-radius:2px;overflow:hidden;background:var(--paper)}
+.seg button{font:inherit;font-size:13px;border:0;background:none;color:var(--ink-2);padding:7px 11px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--kin);color:#fff;font-weight:700}
+.ghost{font:inherit;font-size:13px;border:1px solid var(--kin-line);background:var(--paper);color:var(--kin);border-radius:2px;padding:7px 12px;cursor:pointer}
+.ghost:hover{background:var(--kin-soft)}
+.count{font-size:12px;color:var(--ink-3);margin-left:auto}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;margin-top:8px}
+@media (max-width:420px){.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}}
+.slot{position:relative;display:grid;grid-template-rows:1fr auto auto;justify-items:center;gap:6px;min-height:120px;padding:28px 10px 12px;border-radius:3px;cursor:pointer;text-align:center;font:inherit;color:var(--ink-3);
+  background:var(--slot-off);border:1px dashed #d3cfd8;transition:transform .15s,border-color .15s,box-shadow .15s}
+.slot:hover{transform:translateY(-2px);border-color:var(--kin-line)}
+.slot .no{position:absolute;top:0;left:50%;transform:translateX(-50%);min-width:54px;padding:2px 10px 3px;font-family:var(--f-num);font-weight:700;font-size:12.5px;letter-spacing:.06em;font-variant-numeric:tabular-nums;
+  color:var(--ink-3);background:#e2dfe6;clip-path:polygon(0 0,100% 0,92% 100%,8% 100%)}
+.slot .nm{font-family:var(--f-disp);font-weight:700;font-size:16px;line-height:1.3;word-break:break-all;align-self:center;text-wrap:balance}
+.slot .meta{font-size:11px;letter-spacing:.06em;color:var(--ink-3)}
+.slot.own{color:var(--ink);background:linear-gradient(170deg,#fff,var(--paper) 60%,var(--paper-2));border:1px solid var(--kin-line);
+  box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px rgb(201 163 82 / .35),0 2px 8px rgb(80 60 30 / .06)}
+.slot.own .no{color:#fff;background:linear-gradient(180deg,var(--kin-hi),var(--kin))}
+.slot.own .meta{color:var(--ink-2)}
+.slot.kiw{border-color:var(--kin);box-shadow:inset 0 0 0 3px var(--paper),inset 0 0 0 4px var(--kin),0 3px 12px rgb(168 130 51 / .18)}
+.slot .kw{position:absolute;top:6px;right:6px;width:24px;height:24px;display:grid;place-items:center;font-family:var(--f-disp);font-weight:800;font-size:13px;color:#fff;background:var(--shu);border-radius:2px;transform:rotate(4deg)}
+.slot .new{position:absolute;top:8px;left:8px;font-size:10px;letter-spacing:.1em;color:var(--sakura);font-weight:700}
+.dots{display:flex;gap:4px;justify-content:center;min-height:8px}
+.dots i{width:7px;height:7px;transform:rotate(45deg);border:1px solid var(--ink-3);background:transparent}
+.dots i.on{background:var(--sakura);border-color:var(--sakura)}
+.dots i.on.k{background:var(--kin);border-color:var(--kin)}
+.dots i.na{opacity:.3;border-style:dashed}
+.empty-msg{grid-column:1/-1;padding:48px 0;text-align:center;color:var(--ink-2);font-family:var(--f-disp)}
+.hint{font-size:12.5px;color:var(--ink-3);margin-top:16px}
+
+.scrim{position:fixed;inset:0;background:rgb(43 38 48 / .3);z-index:20}
+.sheet{position:fixed;top:0;right:0;bottom:0;width:min(420px,100%);z-index:21;overflow:auto;display:flex;flex-direction:column;gap:16px;
+  padding:calc(20px + env(safe-area-inset-top,0px)) max(22px,env(safe-area-inset-right,0px)) calc(24px + env(safe-area-inset-bottom,0px)) 22px;
+  background:linear-gradient(180deg,#fff,var(--paper) 40%,var(--paper-2));border-left:2px solid var(--kin-line);box-shadow:-12px 0 36px rgb(60 45 25 / .14)}
+.sheet .x{align-self:flex-end}
+.sheet .hero{padding-bottom:14px;border-bottom:1px solid var(--line)}
+.sheet .no{font-family:var(--f-num);font-weight:700;color:var(--kin);letter-spacing:.08em}
+.sheet h2{font-family:var(--f-disp);font-size:28px;margin:2px 0 0;line-height:1.25;text-wrap:balance;letter-spacing:.04em}
+.sheet .kana{color:var(--ink-2);font-size:12.5px}
+.sec{font-family:var(--f-disp);font-size:14px;letter-spacing:.2em;color:var(--kin);display:flex;align-items:center;gap:10px}
+.sec::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--kin-line),transparent)}
+dl{display:grid;grid-template-columns:auto 1fr;gap:7px 18px;margin:0}
+dt{color:var(--ink-3);font-size:13px;letter-spacing:.1em}
+dd{margin:0}
+.toggles{display:flex;flex-wrap:wrap;gap:8px}
+.tg{font:inherit;padding:9px 16px;border-radius:2px;border:1px solid var(--kin-line);background:var(--paper);color:var(--ink);cursor:pointer;font-family:var(--f-disp);font-weight:700;letter-spacing:.08em}
+.tg[aria-pressed="true"]{background:var(--kin);border-color:var(--kin);color:#fff}
+.tg.k[aria-pressed="true"]{background:var(--shu);border-color:var(--shu);color:#fff}
+.tg:disabled{opacity:.4;cursor:not-allowed}
+.arts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.ac{font:inherit;text-align:left;padding:8px 10px;border-radius:2px;border:1px solid var(--line);background:var(--paper);color:var(--ink-2);cursor:pointer;display:flex;flex-direction:column;gap:1px;font-family:var(--f-disp);font-weight:700;font-size:14px}
+.ac small{font-family:var(--f-body);font-weight:400;font-size:11.5px;color:var(--ink-3)}
+.ac[data-v="1"]{color:var(--ink);border-color:var(--sakura);background:var(--sakura-soft)}
+.ac[data-v="1"] small{color:#b45f73}
+.ac.k[data-v="1"]{border-color:var(--kin);background:var(--kin-soft)}
+.ac.k[data-v="1"] small{color:var(--kin)}
+.ac[data-v="2"]{border-style:dashed;opacity:.6}
+.ac:disabled{opacity:.4;cursor:not-allowed}
+.sheet label{font-size:13px;color:var(--ink-2)}
+.sheet input[type=date],.sheet textarea{font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:2px;padding:8px;width:100%}
+.sheet textarea{min-height:72px;resize:vertical}
+.links a{color:var(--kin)}
+.backup textarea{min-height:140px;font-family:ui-monospace,Menlo,monospace;font-size:12px}
+.msg{font-size:12.5px;color:var(--ink-2)}
+.bio{margin:0;font-family:var(--f-disp);font-size:14.5px;line-height:1.85;color:var(--ink);text-align:justify}
+
+/* tabs + forge calculator */
+.tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--kin-line)}
+.tabs button{font:inherit;font-family:var(--f-disp);font-weight:700;font-size:15px;letter-spacing:.12em;padding:8px 18px;border:1px solid transparent;border-bottom:0;background:none;color:var(--ink-2);cursor:pointer;border-radius:3px 3px 0 0;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{background:var(--paper);border-color:var(--kin-line);color:var(--kin)}
+.fg{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:18px;align-items:start}
+@media (max-width:820px){.fg{grid-template-columns:1fr}}
+.panel{position:relative;background:linear-gradient(165deg,#fff,var(--paper) 55%,var(--paper-2));border:1px solid var(--kin-line);border-radius:4px;padding:18px 20px;box-shadow:inset 0 0 0 4px var(--paper),inset 0 0 0 5px var(--kin-line)}
+.panel h2{font-family:var(--f-disp);font-size:20px;letter-spacing:.14em;margin:0 0 4px}
+.panel .sub{font-size:12.5px;color:var(--ink-2);margin:0 0 12px}
+.fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
+.fields.four{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media (max-width:460px){.fields.four{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.f label{display:block;font-size:12.5px;color:var(--ink-2);margin-bottom:3px}
+.f input{width:100%;font:inherit;font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:2px;padding:7px 9px}
+.f input[type=checkbox],.chk input{width:auto;flex:none;margin:0}
+.f input:disabled{background:var(--slot-off);color:var(--ink-3)}
+.f small{display:block;font-size:11px;color:var(--ink-3);margin-top:2px}
+.f label.chk,.chk{display:flex;gap:8px;align-items:center;font-size:13px;color:var(--ink-2);margin-top:4px}
+.fsec{margin-top:16px}
+.res-hero{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:6px 0 14px}
+@media (max-width:460px){.res-hero{grid-template-columns:1fr}}
+.stat{border:1px solid var(--line);background:#fff;border-radius:2px;padding:10px 12px}
+.stat b{display:block;font-family:var(--f-num);font-size:28px;font-weight:800;color:var(--kin);font-variant-numeric:tabular-nums;line-height:1.15}
+.stat.ok b{color:#3f8a5c}.stat.warn b{color:var(--shu)}
+.stat span{font-size:12px;color:var(--ink-2)}
+.rows{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font-size:13.5px;margin:0}
+.rows dt{color:var(--ink-2);letter-spacing:0}
+.rows dd{margin:0;font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums}
+.chart{width:100%;height:auto;display:block;margin-top:10px}
+.note{font-size:12px;color:var(--ink-3);margin-top:12px;line-height:1.7}
+
+.simctl{display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end;margin-top:14px}
+.f select{width:100%;font:inherit;color:var(--ink);background:#fff;border:1px solid var(--line);border-radius:2px;padding:8px 9px}
+.simbtns{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.quick{display:inline-flex;gap:6px;flex-wrap:wrap}
+.quick .ghost{padding:6px 10px}
+.typebars{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 16px}
+@media (max-width:460px){.typebars{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.tb{border:1px solid var(--line);background:#fff;border-radius:2px;padding:8px 10px}
+.tb .l{display:flex;justify-content:space-between;font-size:13px}
+.tb .l b{font-family:var(--f-disp)}
+.tb .l span{font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums}
+.seq{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 16px}
+.chip{display:inline-flex;flex-direction:column;align-items:center;min-width:86px;padding:6px 8px;border:1px solid var(--line);border-radius:2px;background:#fff;font-size:12px}
+.chip b{font-family:var(--f-disp);font-size:14px}
+.chip small{color:var(--ink-3);font-family:var(--f-num)}
+.chip small.ix{font-size:10.5px;opacity:.8}
+.chip[style] small{color:#fff}
+.logbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:8px}
+#s-log{max-height:520px;overflow-y:auto;padding:2px}
+.chip.rare{border-color:var(--kin);background:var(--kin-soft)}
+.chip.new{box-shadow:inset 0 0 0 1px var(--shu)}
+.restab{width:100%;border-collapse:collapse;font-size:13.5px}
+.restab th{text-align:left;font-weight:500;color:var(--ink-2);font-size:12.5px;border-bottom:1px solid var(--kin-line);padding:6px 8px}
+.restab td{border-bottom:1px solid var(--line);padding:6px 8px}
+.restab td.num{font-family:var(--f-num);font-weight:700;font-variant-numeric:tabular-nums;text-align:right}
+.restab th.num{text-align:right}
+.restab .nm{font-family:var(--f-disp);font-weight:700}
+.tag{display:inline-block;font-size:11px;padding:0 6px;border-radius:2px;margin-left:6px;vertical-align:1px}
+.tag.new{color:#fff;background:var(--shu)}
+.tag.rare{color:var(--kin);border:1px solid var(--kin-line)}
+.tablewrap{overflow-x:auto}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}.slot:hover{transform:none}}
+</style>
+</head>
+<body>
+
+
+
+<canvas id="petals" aria-hidden="true"></canvas>
+<div class="wrap">
+  <nav class="tabs" role="tablist" aria-label="页面">
+    <button role="tab" id="tabBook" aria-selected="true" aria-controls="viewBook">刀帐</button>
+    <button role="tab" id="tabForge" aria-selected="false" aria-controls="viewForge">限时锻刀计算</button>
+    <button role="tab" id="tabSim" aria-selected="false" aria-controls="viewSim">锻刀模拟</button>
+  </nav>
+  <section id="viewBook" role="tabpanel" aria-labelledby="tabBook">
+  <header class="top">
+    <div>
+      <div class="eyebrow">刀剣乱舞 ONLINE · 刀帐收集</div>
+      <h1>本丸刀帐<small>刀帳</small></h1>
+      <div class="big"><b id="ownN">0</b><span>/ <span id="allN">0</span> 振</span><em id="kiwN"></em></div>
+      <div class="bar"><i id="ownBar"></i></div>
+      <div class="artsum" id="artSum"></div>
+      <div class="save" id="saveState">正在读取存档…</div>
+      <div class="acct" id="acct"></div>
+    </div>
+    <div class="meters" id="meters" aria-label="按刀种统计"></div>
+  </header>
+
+  <div class="filters">
+    <input id="q" type="search" placeholder="搜刀名、读音、刀派、声优…" aria-label="搜索">
+    <select id="school" aria-label="刀派"></select>
+    <div class="seg" role="group" aria-label="入手状态">
+      <button data-st="all" aria-pressed="true">全部</button>
+      <button data-st="own" aria-pressed="false">已入手</button>
+      <button data-st="miss" aria-pressed="false">未入手</button>
+      <button data-st="kiw" aria-pressed="false">已极</button>
+      <button data-st="art" aria-pressed="false">立绘未齐</button>
+    </div>
+    <button class="ghost" id="backupBtn">备份 / 导入</button>
+    <span class="count" id="count"></span>
+  </div>
+
+  <div class="grid" id="grid"></div>
+  <p class="hint">点卡片打开详情，可标记入手、极化、入手日期和备注。按住 Shift 点击（或双击）卡片可直接切换入手。卡片下方的小菱形是立绘解锁情况（樱色为普通立绘，金色为极的立绘）。刀帐数据截至 2026 年 10 月 13 日（朝倉藤四郎实装），共 130 振。</p>
+  </section>
+
+  <section id="viewForge" role="tabpanel" aria-labelledby="tabForge" hidden>
+    <div class="fg">
+      <div class="panel">
+        <h2>手头资源</h2>
+        <p class="sub">填你现在有多少资源，能锻几次取决于最先用完的那一种。</p>
+        <div class="fields four">
+          <div class="f"><label for="f-r1">木炭</label><input id="f-r1" type="number" min="0" step="100" inputmode="numeric"></div>
+          <div class="f"><label for="f-r2">玉鋼</label><input id="f-r2" type="number" min="0" step="100" inputmode="numeric"></div>
+          <div class="f"><label for="f-r3">冷却材</label><input id="f-r3" type="number" min="0" step="100" inputmode="numeric"></div>
+          <div class="f"><label for="f-r4">砥石</label><input id="f-r4" type="number" min="0" step="100" inputmode="numeric"></div>
+        </div>
+        <div class="fsec"><h2 style="font-size:16px">锻刀配方</h2><p class="sub">每锻一次各资源用多少。限时锻刀一般是各 700，以活动公告为准。</p></div>
+        <div class="fields four">
+          <div class="f"><label for="f-u1">木炭 / 次</label><input id="f-u1" type="number" min="50" max="999" step="10" inputmode="numeric"></div>
+          <div class="f"><label for="f-u2">玉鋼 / 次</label><input id="f-u2" type="number" min="50" max="999" step="10" inputmode="numeric"></div>
+          <div class="f"><label for="f-u3">冷却材 / 次</label><input id="f-u3" type="number" min="50" max="999" step="10" inputmode="numeric"></div>
+          <div class="f"><label for="f-u4">砥石 / 次</label><input id="f-u4" type="number" min="50" max="999" step="10" inputmode="numeric"></div>
+        </div>
+        <label class="chk" style="margin-top:8px"><input type="checkbox" id="f-cnt"> 这个配方能攒顕現ポイント（只有活动指定的配方才算天井）</label>
+        <div class="fields fsec">
+          <div class="f"><label for="f-tk">依頼札</label><input id="f-tk" type="number" min="0" inputmode="numeric"><small>每锻一次用 1 张</small></div>
+          <div class="f" style="align-self:center"><label class="chk"><input type="checkbox" id="f-ten"> 用十连锻刀（9 张札锻 10 次）</label></div>
+        </div>
+        <div class="fsec"><h2 style="font-size:16px">御札</h2><p class="sub">勾选要用的御札，再填张数。每锻一次用一张，勾了几种就按富士 → 松 → 竹 → 梅的顺序先用好的，用完后不加御札继续锻。</p></div>
+        <div class="fields four">
+          <div class="f"><label class="chk" for="f-e4" style="margin:0 0 3px"><input type="checkbox" id="f-e4"> 用富士札</label><input id="f-c4" type="number" min="0" inputmode="numeric" aria-label="富士札数量"><small>张数</small></div>
+          <div class="f"><label class="chk" for="f-e3" style="margin:0 0 3px"><input type="checkbox" id="f-e3"> 用松の札</label><input id="f-c3" type="number" min="0" inputmode="numeric" aria-label="松の札数量"><small>张数</small></div>
+          <div class="f"><label class="chk" for="f-e2" style="margin:0 0 3px"><input type="checkbox" id="f-e2"> 用竹の札</label><input id="f-c2" type="number" min="0" inputmode="numeric" aria-label="竹の札数量"><small>张数</small></div>
+          <div class="f"><label class="chk" for="f-e1" style="margin:0 0 3px"><input type="checkbox" id="f-e1"> 用梅の札</label><input id="f-c1" type="number" min="0" inputmode="numeric" aria-label="梅の札数量"><small>张数</small></div>
+        </div>
+        <div class="fsec"><h2 style="font-size:16px">活动设定</h2><p class="sub">每期活动可能不同，以游戏内公告为准，可以自己改。</p></div>
+        <div class="fields">
+          <div class="f"><label for="f-p">单次出货率（%）</label><input id="f-p" type="number" min="0.01" max="100" step="0.1" inputmode="decimal"><small>官方未公布。玩家集计约 0.05%–0.25%，默认 0.2%</small></div>
+          <div class="f"><label for="f-ceil">天井所需顕現ポイント</label><input id="f-ceil" type="number" min="0" step="100" inputmode="numeric"><small>天井：攒满这么多点数就保底送这把刀</small></div>
+        </div>
+        <div class="fields four fsec">
+          <div class="f"><label for="f-p0">无御札 pt</label><input id="f-p0" type="number" min="0" inputmode="numeric"></div>
+          <div class="f"><label for="f-p1">梅 pt</label><input id="f-p1" type="number" min="0" inputmode="numeric"></div>
+          <div class="f"><label for="f-p2">竹 pt</label><input id="f-p2" type="number" min="0" inputmode="numeric"></div>
+          <div class="f"><label for="f-p3">松 pt</label><input id="f-p3" type="number" min="0" inputmode="numeric"></div>
+          <div class="f"><label for="f-p4">富士 pt</label><input id="f-p4" type="number" min="0" inputmode="numeric"></div>
+        </div>
+        <button class="ghost fsec" id="f-reset" type="button">恢复默认设定</button>
+      </div>
+
+      <div class="panel" aria-live="polite">
+        <h2>计算结果</h2>
+        <p class="sub" id="f-summary"></p>
+        <div class="res-hero">
+          <div class="stat" id="f-sProb"><b id="f-prob">–</b><span>用完资源前拿到的概率</span></div>
+          <div class="stat"><b id="f-n">–</b><span>你能锻的次数</span></div>
+          <div class="stat"><b id="f-ceilN">–</b><span>到天井要锻的次数</span></div>
+        </div>
+        <dl class="rows" id="f-rows"></dl>
+        <svg class="chart" id="f-chart" viewBox="0 0 560 250" role="img" aria-label="锻刀次数与拿到概率的关系"></svg>
+        <p class="note">天井：限时锻刀活动的保底机制。每次用活动指定配方锻刀会攒「顕現ポイント」，攒满规定点数后，这把刀会直接送到你的礼物箱，不用再靠运气。目前天井为 5,000 点；每次锻刀的点数为：无御札 5、梅 10、竹 15、松 20、富士 60（富士札 2025 年 1 月起由 35 点改为 60 点）。<br>
+出货率：官方没有公布。玩家在日本论坛集计过几期：日光一文字约 0.25%（2,818 次出 7 振）、鬼丸国綱约 0.17%、孫六兼元约 0.05%（2,117 次只出 1 振，样本太少），也有攻略认为大致在 0.2% 左右。默认按 0.2% 计算，可以自己调整。<br>
+计算方法：每次锻刀独立判定，拿到的概率是 1 −（1 − 出货率）^次数；攒满天井视为必得。御札只计算对顕現ポイント的影响，它对出货率有没有作用官方也没有说明。</p>
+      </div>
+    </div>
+  </section>
+  <section id="viewSim" role="tabpanel" aria-labelledby="tabSim" hidden>
+    <div class="panel">
+      <h2>锻刀模拟</h2>
+      <p class="sub">选一个常用配方、填锻刀次数，按玩家统计的出现率随机模拟结果。不计资源和依頼札。</p>
+      <div class="seg" role="group" aria-label="锻刀方式" style="margin-bottom:12px">
+        <button type="button" data-mode="normal" aria-pressed="true">普通锻刀</button>
+        <button type="button" data-mode="limited" aria-pressed="false">限时锻刀</button>
+      </div>
+      <div id="s-limbox" hidden>
+        <div class="fields" style="margin-bottom:10px">
+          <div class="f"><label for="s-lim">限锻刀</label><select id="s-lim"></select><small id="s-liminfo"></small></div>
+          <div class="f" id="s-customwrap" hidden><label for="s-custom">选择或输入刀名</label><input id="s-custom" list="s-bladelist" placeholder="例如：三日月宗近"><datalist id="s-bladelist"></datalist><small>可以从刀帐里选，也可以自己输入名字</small></div>
+        </div>
+        <div class="fields four">
+          <div class="f"><label for="s-p">出货率（%）</label><input id="s-p" type="number" min="0.01" max="100" step="0.05" value="0.2" inputmode="decimal"><small>玩家估算约 0.2%</small></div>
+          <div class="f"><label for="s-charm">每次用的御札</label><select id="s-charm"><option value="0">不用（5 pt）</option><option value="1">梅（10 pt）</option><option value="2">竹（15 pt）</option><option value="3">松（20 pt）</option><option value="4">富士（60 pt）</option></select></div>
+          <div class="f"><label for="s-ceil">天井点数</label><input id="s-ceil" type="number" min="0" step="100" value="5000" inputmode="numeric"><small>填 0 表示不计天井</small></div>
+        </div>
+      </div>
+      <div class="simctl">
+        <div class="f" style="flex:2 1 260px" id="s-recwrap"><label for="s-rec">配方（木炭 / 玉鋼 / 冷却材 / 砥石）</label><select id="s-rec"></select></div>
+        <div class="f" style="flex:1 1 120px"><label for="s-n">锻刀次数</label><input id="s-n" type="number" min="1" max="10000" value="10" inputmode="numeric"></div>
+        <div class="simbtns"><button class="tg" id="s-go" type="button" aria-pressed="true">锻刀</button>
+          <span class="quick"><button class="ghost" data-n="1">1 次</button><button class="ghost" data-n="10">10 次</button><button class="ghost" data-n="100">100 次</button><button class="ghost" data-n="1000">1000 次</button></span></div>
+      </div>
+      <p class="msg" id="s-recinfo"></p>
+    </div>
+    <div class="panel" style="margin-top:16px" id="s-out" aria-live="polite">
+      <p class="msg">还没有开始锻刀。选好配方，点「锻刀」试试。</p>
+    </div>
+  </section>
+</div>
+
+<div class="scrim" id="scrim" hidden></div>
+<aside class="sheet" id="sheet" hidden aria-modal="true" role="dialog" aria-labelledby="dName"></aside>
+
+<script>/* supabase-js 2.45.4 (MIT) */
+!function(e,t){"object"==typeof exports&&"object"==typeof module?module.exports=t():"function"==typeof define&&define.amd?define([],t):"object"==typeof exports?exports.supabase=t():e.supabase=t()}(self,(()=>(()=>{"use strict";var e,t,s,r,i={235:(e,t,s)=>{s.r(t),s.d(t,{AuthAdminApi:()=>ie,AuthApiError:()=>T,AuthClient:()=>ne,AuthError:()=>w,AuthImplicitGrantRedirectError:()=>x,AuthInvalidCredentialsError:()=>$,AuthInvalidTokenResponseError:()=>A,AuthPKCEGrantCodeExchangeError:()=>C,AuthRetryableFetchError:()=>R,AuthSessionMissingError:()=>j,AuthUnknownError:()=>E,AuthWeakPasswordError:()=>L,CustomAuthError:()=>O,GoTrueAdminApi:()=>K,GoTrueClient:()=>re,NavigatorLockAcquireTimeoutError:()=>X,isAuthApiError:()=>S,isAuthError:()=>k,isAuthRetryableFetchError:()=>I,isAuthSessionMissingError:()=>P,isAuthWeakPasswordError:()=>U,lockInternals:()=>Y,navigatorLock:()=>Z});const r="2.65.0",i={"X-Client-Info":`gotrue-js/${r}`},n="X-Supabase-Api-Version",o={"2024-01-01":{timestamp:Date.parse("2024-01-01T00:00:00.0Z"),name:"2024-01-01"}},a=()=>"undefined"!=typeof document,c={tested:!1,writable:!1},l=()=>{if(!a())return!1;try{if("object"!=typeof globalThis.localStorage)return!1}catch(e){return!1}if(c.tested)return c.writable;const e=`lswt-${Math.random()}${Math.random()}`;try{globalThis.localStorage.setItem(e,e),globalThis.localStorage.removeItem(e),c.tested=!0,c.writable=!0}catch(e){c.tested=!0,c.writable=!1}return c.writable};function h(e){const t={},s=new URL(e);if(s.hash&&"#"===s.hash[0])try{new URLSearchParams(s.hash.substring(1)).forEach(((e,s)=>{t[s]=e}))}catch(e){}return s.searchParams.forEach(((e,s)=>{t[s]=e})),t}const u=e=>{let t;return t=e||("undefined"==typeof fetch?(...e)=>Promise.resolve().then(s.bind(s,907)).then((({default:t})=>t(...e))):fetch),(...e)=>t(...e)},d=e=>"object"==typeof e&&null!==e&&"status"in e&&"ok"in e&&"json"in e&&"function"==typeof e.json,f=async(e,t,s)=>{await e.setItem(t,JSON.stringify(s))},p=async(e,t)=>{const s=await e.getItem(t);if(!s)return null;try{return JSON.parse(s)}catch(e){return s}},g=async(e,t)=>{await e.removeItem(t)};class y{constructor(){this.promise=new y.promiseConstructor(((e,t)=>{this.resolve=e,this.reject=t}))}}function v(e){const t=e.split(".");if(3!==t.length)throw new Error("JWT is not valid: not a JWT structure");if(!/^([a-z0-9_-]{4})*($|[a-z0-9_-]{3}=?$|[a-z0-9_-]{2}(==)?$)$/i.test(t[1]))throw new Error("JWT is not valid: payload is not in base64url format");const s=t[1];return JSON.parse(function(e){const t="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=";let s,r,i,n,o,a,c,l="",h=0;for(e=e.replace("-","+").replace("_","/");h<e.length;)n=t.indexOf(e.charAt(h++)),o=t.indexOf(e.charAt(h++)),a=t.indexOf(e.charAt(h++)),c=t.indexOf(e.charAt(h++)),s=n<<2|o>>4,r=(15&o)<<4|a>>2,i=(3&a)<<6|c,l+=String.fromCharCode(s),64!=a&&0!=r&&(l+=String.fromCharCode(r)),64!=c&&0!=i&&(l+=String.fromCharCode(i));return l}(s))}function m(e){return("0"+e.toString(16)).substr(-2)}async function _(e,t,s=!1){const r=function(){const e=new Uint32Array(56);if("undefined"==typeof crypto){const e="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-._~",t=e.length;let s="";for(let r=0;r<56;r++)s+=e.charAt(Math.floor(Math.random()*t));return s}return crypto.getRandomValues(e),Array.from(e,m).join("")}();let i=r;s&&(i+="/PASSWORD_RECOVERY"),await f(e,`${t}-code-verifier`,i);const n=await async function(e){if("undefined"==typeof crypto||void 0===crypto.subtle||"undefined"==typeof TextEncoder)return console.warn("WebCrypto API is not supported. Code challenge method will default to use plain instead of sha256."),e;const t=await async function(e){const t=(new TextEncoder).encode(e),s=await crypto.subtle.digest("SHA-256",t),r=new Uint8Array(s);return Array.from(r).map((e=>String.fromCharCode(e))).join("")}(e);return btoa(t).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"")}(r);return[n,r===n?"plain":"s256"]}y.promiseConstructor=Promise;const b=/^2[0-9]{3}-(0[1-9]|1[0-2])-(0[1-9]|1[0-9]|2[0-9]|3[0-1])$/i;class w extends Error{constructor(e,t,s){super(e),this.__isAuthError=!0,this.name="AuthError",this.status=t,this.code=s}}function k(e){return"object"==typeof e&&null!==e&&"__isAuthError"in e}class T extends w{constructor(e,t,s){super(e,t,s),this.name="AuthApiError",this.status=t,this.code=s}}function S(e){return k(e)&&"AuthApiError"===e.name}class E extends w{constructor(e,t){super(e),this.name="AuthUnknownError",this.originalError=t}}class O extends w{constructor(e,t,s,r){super(e,s,r),this.name=t,this.status=s}}class j extends O{constructor(){super("Auth session missing!","AuthSessionMissingError",400,void 0)}}function P(e){return k(e)&&"AuthSessionMissingError"===e.name}class A extends O{constructor(){super("Auth session or user missing","AuthInvalidTokenResponseError",500,void 0)}}class $ extends O{constructor(e){super(e,"AuthInvalidCredentialsError",400,void 0)}}class x extends O{constructor(e,t=null){super(e,"AuthImplicitGrantRedirectError",500,void 0),this.details=null,this.details=t}toJSON(){return{name:this.name,message:this.message,status:this.status,details:this.details}}}class C extends O{constructor(e,t=null){super(e,"AuthPKCEGrantCodeExchangeError",500,void 0),this.details=null,this.details=t}toJSON(){return{name:this.name,message:this.message,status:this.status,details:this.details}}}class R extends O{constructor(e,t){super(e,"AuthRetryableFetchError",t,void 0)}}function I(e){return k(e)&&"AuthRetryableFetchError"===e.name}class L extends O{constructor(e,t,s){super(e,"AuthWeakPasswordError",t,"weak_password"),this.reasons=s}}function U(e){return k(e)&&"AuthWeakPasswordError"===e.name}const D=e=>e.msg||e.message||e.error_description||e.error||JSON.stringify(e),N=[502,503,504];async function F(e){var t;if(!d(e))throw new R(D(e),0);if(N.includes(e.status))throw new R(D(e),e.status);let s,r;try{s=await e.json()}catch(e){throw new E(D(e),e)}const i=function(e){const t=e.headers.get(n);if(!t)return null;if(!t.match(b))return null;try{return new Date(`${t}T00:00:00.0Z`)}catch(e){return null}}(e);if(i&&i.getTime()>=o["2024-01-01"].timestamp&&"object"==typeof s&&s&&"string"==typeof s.code?r=s.code:"object"==typeof s&&s&&"string"==typeof s.error_code&&(r=s.error_code),r){if("weak_password"===r)throw new L(D(s),e.status,(null===(t=s.weak_password)||void 0===t?void 0:t.reasons)||[]);if("session_not_found"===r)throw new j}else if("object"==typeof s&&s&&"object"==typeof s.weak_password&&s.weak_password&&Array.isArray(s.weak_password.reasons)&&s.weak_password.reasons.length&&s.weak_password.reasons.reduce(((e,t)=>e&&"string"==typeof t),!0))throw new L(D(s),e.status,s.weak_password.reasons);throw new T(D(s),e.status||500,r)}async function M(e,t,s,r){var i;const a=Object.assign({},null==r?void 0:r.headers);a[n]||(a[n]=o["2024-01-01"].name),(null==r?void 0:r.jwt)&&(a.Authorization=`Bearer ${r.jwt}`);const c=null!==(i=null==r?void 0:r.query)&&void 0!==i?i:{};(null==r?void 0:r.redirectTo)&&(c.redirect_to=r.redirectTo);const l=Object.keys(c).length?"?"+new URLSearchParams(c).toString():"",h=await async function(e,t,s,r,i,n){const o=((e,t,s,r)=>{const i={method:e,headers:(null==t?void 0:t.headers)||{}};return"GET"===e?i:(i.headers=Object.assign({"Content-Type":"application/json;charset=UTF-8"},null==t?void 0:t.headers),i.body=JSON.stringify(r),Object.assign(Object.assign({},i),s))})(t,r,{},n);let a;try{a=await e(s,Object.assign({},o))}catch(e){throw console.error(e),new R(D(e),0)}if(a.ok||await F(a),null==r?void 0:r.noResolveJson)return a;try{return await a.json()}catch(e){await F(e)}}(e,t,s+l,{headers:a,noResolveJson:null==r?void 0:r.noResolveJson},0,null==r?void 0:r.body);return(null==r?void 0:r.xform)?null==r?void 0:r.xform(h):{data:Object.assign({},h),error:null}}function B(e){var t;let s=null;var r;return function(e){return e.access_token&&e.refresh_token&&e.expires_in}(e)&&(s=Object.assign({},e),e.expires_at||(s.expires_at=(r=e.expires_in,Math.round(Date.now()/1e3)+r))),{data:{session:s,user:null!==(t=e.user)&&void 0!==t?t:e},error:null}}function q(e){const t=B(e);return!t.error&&e.weak_password&&"object"==typeof e.weak_password&&Array.isArray(e.weak_password.reasons)&&e.weak_password.reasons.length&&e.weak_password.message&&"string"==typeof e.weak_password.message&&e.weak_password.reasons.reduce(((e,t)=>e&&"string"==typeof t),!0)&&(t.data.weak_password=e.weak_password),t}function z(e){var t;return{data:{user:null!==(t=e.user)&&void 0!==t?t:e},error:null}}function H(e){return{data:e,error:null}}function J(e){const{action_link:t,email_otp:s,hashed_token:r,redirect_to:i,verification_type:n}=e,o=function(e,t){var s={};for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&t.indexOf(r)<0&&(s[r]=e[r]);if(null!=e&&"function"==typeof Object.getOwnPropertySymbols){var i=0;for(r=Object.getOwnPropertySymbols(e);i<r.length;i++)t.indexOf(r[i])<0&&Object.prototype.propertyIsEnumerable.call(e,r[i])&&(s[r[i]]=e[r[i]])}return s}(e,["action_link","email_otp","hashed_token","redirect_to","verification_type"]);return{data:{properties:{action_link:t,email_otp:s,hashed_token:r,redirect_to:i,verification_type:n},user:Object.assign({},o)},error:null}}function G(e){return e}class K{constructor({url:e="",headers:t={},fetch:s}){this.url=e,this.headers=t,this.fetch=u(s),this.mfa={listFactors:this._listFactors.bind(this),deleteFactor:this._deleteFactor.bind(this)}}async signOut(e,t="global"){try{return await M(this.fetch,"POST",`${this.url}/logout?scope=${t}`,{headers:this.headers,jwt:e,noResolveJson:!0}),{data:null,error:null}}catch(e){if(k(e))return{data:null,error:e};throw e}}async inviteUserByEmail(e,t={}){try{return await M(this.fetch,"POST",`${this.url}/invite`,{body:{email:e,data:t.data},headers:this.headers,redirectTo:t.redirectTo,xform:z})}catch(e){if(k(e))return{data:{user:null},error:e};throw e}}async generateLink(e){try{const{options:t}=e,s=function(e,t){var s={};for(var r in e)Object.prototype.hasOwnProperty.call(e,r)&&t.indexOf(r)<0&&(s[r]=e[r]);if(null!=e&&"function"==typeof Object.getOwnPropertySymbols){var i=0;for(r=Object.getOwnPropertySymbols(e);i<r.length;i++)t.indexOf(r[i])<0&&Object.prototype.propertyIsEnumerable.call(e,r[i])&&(s[r[i]]=e[r[i]])}return s}(e,["options"]),r=Object.assign(Object.assign({},s),t);return"newEmail"in s&&(r.new_email=null==s?void 0:s.newEmail,delete r.newEmail),await M(this.fetch,"POST",`${this.url}/admin/generate_link`,{body:r,headers:this.headers,xform:J,redirectTo:null==t?void 0:t.redirectTo})}catch(e){if(k(e))return{data:{properties:null,user:null},error:e};throw e}}async createUser(e){try{return await M(this.fetch,"POST",`${this.url}/admin/users`,{body:e,headers:this.headers,xform:z})}catch(e){if(k(e))return{data:{user:null},error:e};throw e}}async listUsers(e){var t,s,r,i,n,o,a;try{const c={nextPage:null,lastPage:0,total:0},l=await M(this.fetch,"GET",`${this.url}/admin/users`,{headers:this.headers,noResolveJson:!0,query:{page:null!==(s=null===(t=null==e?void 0:e.page)||void 0===t?void 0:t.toString())&&void 0!==s?s:"",per_page:null!==(i=null===(r=null==e?void 0:e.perPage)||void 0===r?void 0:r.toString())&&void 0!==i?i:""},xform:G});if(l.error)throw l.error;const h=await l.json(),u=null!==(n=l.headers.get("x-total-count"))&&void 0!==n?n:0,d=null!==(a=null===(o=l.headers.get("link"))||void 0===o?void 0:o.split(","))&&void 0!==a?a:[];return d.length>0&&(d.forEach((e=>{const t=parseInt(e.split(";")[0].split("=")[1].substring(0,1)),s=JSON.parse(e.split(";")[1].split("=")[1]);c[`${s}Page`]=t})),c.total=parseInt(u)),{data:Object.assign(Object.assign({},h),c),error:null}}catch(e){if(k(e))return{data:{users:[]},error:e};throw e}}async getUserById(e){try{return await M(this.fetch,"GET",`${this.url}/admin/users/${e}`,{headers:this.headers,xform:z})}catch(e){if(k(e))return{data:{user:null},error:e};throw e}}async updateUserById(e,t){try{return await M(this.fetch,"PUT",`${this.url}/admin/users/${e}`,{body:t,headers:this.headers,xform:z})}catch(e){if(k(e))return{data:{user:null},error:e};throw e}}async deleteUser(e,t=!1){try{return await M(this.fetch,"DELETE",`${this.url}/admin/users/${e}`,{headers:this.headers,body:{should_soft_delete:t},xform:z})}catch(e){if(k(e))return{data:{user:null},error:e};throw e}}async _listFactors(e){try{const{data:t,error:s}=await M(this.fetch,"GET",`${this.url}/admin/users/${e.userId}/factors`,{headers:this.headers,xform:e=>({data:{factors:e},error:null})});return{data:t,error:s}}catch(e){if(k(e))return{data:null,error:e};throw e}}async _deleteFactor(e){try{return{data:await M(this.fetch,"DELETE",`${this.url}/admin/users/${e.userId}/factors/${e.id}`,{headers:this.headers}),error:null}}catch(e){if(k(e))return{data:null,error:e};throw e}}}const W={getItem:e=>l()?globalThis.localStorage.getItem(e):null,setItem:(e,t)=>{l()&&globalThis.localStorage.setItem(e,t)},removeItem:e=>{l()&&globalThis.localStorage.removeItem(e)}};function V(e={}){return{getItem:t=>e[t]||null,setItem:(t,s)=>{e[t]=s},removeItem:t=>{delete e[t]}}}const Y={debug:!!(globalThis&&l()&&globalThis.localStorage&&"true"===globalThis.localStorage.getItem("supabase.gotrue-js.locks.debug"))};class Q extends Error{constructor(e){super(e),this.isAcquireTimeout=!0}}class X extends Q{}async function Z(e,t,s){Y.debug&&console.log("@supabase/gotrue-js: navigatorLock: acquire lock",e,t);const r=new globalThis.AbortController;return t>0&&setTimeout((()=>{r.abort(),Y.debug&&console.log("@supabase/gotrue-js: navigatorLock acquire timed out",e)}),t),await globalThis.navigator.locks.request(e,0===t?{mode:"exclusive",ifAvailable:!0}:{mode:"exclusive",signal:r.signal},(async r=>{if(!r){if(0===t)throw Y.debug&&console.log("@supabase/gotrue-js: navigatorLock: not immediately available",e),new X(`Acquiring an exclusive Navigator LockManager lock "${e}" immediately failed`);if(Y.debug)try{const e=await globalThis.navigator.locks.query();console.log("@supabase/gotrue-js: Navigator LockManager state",JSON.stringify(e,null,"  "))}catch(e){console.warn("@supabase/gotrue-js: Error when querying Navigator LockManager state",e)}return console.warn("@supabase/gotrue-js: Navigator LockManager returned a null lock when using #request without ifAvailable set to true, it appears this browser is not following the LockManager spec https://developer.mozilla.org/en-US/docs/Web/API/LockManager/request"),await s()}Y.debug&&console.log("@supabase/gotrue-js: navigatorLock: acquired",e,r.name);try{return await s()}finally{Y.debug&&console.log("@supabase/gotrue-js: navigatorLock: released",e,r.name)}}))}!function(){if("object"!=typeof globalThis)try{Object.defineProperty(Object.prototype,"__magic__",{get:function(){return this},configurable:!0}),__magic__.globalThis=__magic__,delete Object.prototype.__magic__}catch(e){"undefined"!=typeof self&&(self.globalThis=self)}}();const ee={url:"http://localhost:9999",storageKey:"supabase.auth.token",autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,headers:i,flowType:"implicit",debug:!1,hasCustomAuthorizationHeader:!1},te=3e4;async function se(e,t,s){return await s()}class re{constructor(e){var t,s;this.memoryStorage=null,this.stateChangeEmitters=new Map,this.autoRefreshTicker=null,this.visibilityChangedCallback=null,this.refreshingDeferred=null,this.initializePromise=null,this.detectSessionInUrl=!0,this.hasCustomAuthorizationHeader=!1,this.suppressGetSessionWarning=!1,this.lockAcquired=!1,this.pendingInLock=[],this.broadcastChannel=null,this.logger=console.log,this.instanceID=re.nextInstanceID,re.nextInstanceID+=1,this.instanceID>0&&a()&&console.warn("Multiple GoTrueClient instances detected in the same browser context. It is not an error, but this should be avoided as it may produce undefined behavior when used concurrently under the same storage key.");const r=Object.assign(Object.assign({},ee),e);if(this.logDebugMessages=!!r.debug,"function"==typeof r.debug&&(this.logger=r.debug),this.persistSession=r.persistSession,this.storageKey=r.storageKey,this.autoRefreshToken=r.autoRefreshToken,this.admin=new K({url:r.url,headers:r.headers,fetch:r.fetch}),this.url=r.url,this.headers=r.headers,this.fetch=u(r.fetch),this.lock=r.lock||se,this.detectSessionInUrl=r.detectSessionInUrl,this.flowType=r.flowType,this.hasCustomAuthorizationHeader=r.hasCustomAuthorizationHeader,r.lock?this.lock=r.lock:a()&&(null===(t=null===globalThis||void 0===globalThis?void 0:globalThis.navigator)||void 0===t?void 0:t.locks)?this.lock=Z:this.lock=se,this.mfa={verify:this._verify.bind(this),enroll:this._enroll.bind(this),unenroll:this._unenroll.bind(this),challenge:this._challenge.bind(this),listFactors:this._listFactors.bind(this),challengeAndVerify:this._challengeAndVerify.bind(this),getAuthenticatorAssuranceLevel:this._getAuthenticatorAssuranceLevel.bind(this)},this.persistSession?r.storage?this.storage=r.storage:l()?this.storage=W:(this.memoryStorage={},this.storage=V(this.memoryStorage)):(this.memoryStorage={},this.storage=V(this.memoryStorage)),a()&&globalThis.BroadcastChannel&&this.persistSession&&this.storageKey){try{this.broadcastChannel=new globalThis.BroadcastChannel(this.storageKey)}catch(e){console.error("Failed to create a new BroadcastChannel, multi-tab state changes will not be available",e)}null===(s=this.broadcastChannel)||void 0===s||s.addEventListener("message",(async e=>{this._debug("received broadcast notification from other tab or client",e),await this._notifyAllSubscribers(e.data.event,e.data.session,!1)}))}this.initialize()}_debug(...e){return this.logDebugMessages&&this.logger(`GoTrueClient@${this.instanceID} (${r}) ${(new Date).toISOString()}`,...e),this}async initialize(){return this.initializePromise||(this.initializePromise=(async()=>await this._acquireLock(-1,(async()=>await this._initialize())))()),await this.initializePromise}async _initialize(){try{const e=!!a()&&await this._isPKCEFlow();if(this._debug("#_initialize()","begin","is PKCE flow",e),e||this.detectSessionInUrl&&this._isImplicitGrantFlow()){const{data:t,error:s}=await this._getSessionFromURL(e);if(s)return this._debug("#_initialize()","error detecting session from URL",s),"Identity is already linked"===(null==s?void 0:s.message)||"Identity is already linked to another user"===(null==s?void 0:s.message)||await this._removeSession(),{error:s};const{session:r,redirectType:i}=t;return this._debug("#_initialize()","detected session in URL",r,"redirect type",i),await this._saveSession(r),setTimeout((async()=>{"recovery"===i?await this._notifyAllSubscribers("PASSWORD_RECOVERY",r):await this._notifyAllSubscribers("SIGNED_IN",r)}),0),{error:null}}return await this._recoverAndRefresh(),{error:null}}catch(e){return k(e)?{error:e}:{error:new E("Unexpected error during initialization",e)}}finally{await this._handleVisibilityChange(),this._debug("#_initialize()","end")}}async signInAnonymously(e){var t,s,r;try{const i=await M(this.fetch,"POST",`${this.url}/signup`,{headers:this.headers,body:{data:null!==(s=null===(t=null==e?void 0:e.options)||void 0===t?void 0:t.data)&&void 0!==s?s:{},gotrue_meta_security:{captcha_token:null===(r=null==e?void 0:e.options)||void 0===r?void 0:r.captchaToken}},xform:B}),{data:n,error:o}=i;if(o||!n)return{data:{user:null,session:null},error:o};const a=n.session,c=n.user;return n.session&&(await this._saveSession(n.session),await this._notifyAllSubscribers("SIGNED_IN",a)),{data:{user:c,session:a},error:null}}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async signUp(e){var t,s,r;try{let i;if("email"in e){const{email:s,password:r,options:n}=e;let o=null,a=null;"pkce"===this.flowType&&([o,a]=await _(this.storage,this.storageKey)),i=await M(this.fetch,"POST",`${this.url}/signup`,{headers:this.headers,redirectTo:null==n?void 0:n.emailRedirectTo,body:{email:s,password:r,data:null!==(t=null==n?void 0:n.data)&&void 0!==t?t:{},gotrue_meta_security:{captcha_token:null==n?void 0:n.captchaToken},code_challenge:o,code_challenge_method:a},xform:B})}else{if(!("phone"in e))throw new $("You must provide either an email or phone number and a password");{const{phone:t,password:n,options:o}=e;i=await M(this.fetch,"POST",`${this.url}/signup`,{headers:this.headers,body:{phone:t,password:n,data:null!==(s=null==o?void 0:o.data)&&void 0!==s?s:{},channel:null!==(r=null==o?void 0:o.channel)&&void 0!==r?r:"sms",gotrue_meta_security:{captcha_token:null==o?void 0:o.captchaToken}},xform:B})}}const{data:n,error:o}=i;if(o||!n)return{data:{user:null,session:null},error:o};const a=n.session,c=n.user;return n.session&&(await this._saveSession(n.session),await this._notifyAllSubscribers("SIGNED_IN",a)),{data:{user:c,session:a},error:null}}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async signInWithPassword(e){try{let t;if("email"in e){const{email:s,password:r,options:i}=e;t=await M(this.fetch,"POST",`${this.url}/token?grant_type=password`,{headers:this.headers,body:{email:s,password:r,gotrue_meta_security:{captcha_token:null==i?void 0:i.captchaToken}},xform:q})}else{if(!("phone"in e))throw new $("You must provide either an email or phone number and a password");{const{phone:s,password:r,options:i}=e;t=await M(this.fetch,"POST",`${this.url}/token?grant_type=password`,{headers:this.headers,body:{phone:s,password:r,gotrue_meta_security:{captcha_token:null==i?void 0:i.captchaToken}},xform:q})}}const{data:s,error:r}=t;return r?{data:{user:null,session:null},error:r}:s&&s.session&&s.user?(s.session&&(await this._saveSession(s.session),await this._notifyAllSubscribers("SIGNED_IN",s.session)),{data:Object.assign({user:s.user,session:s.session},s.weak_password?{weakPassword:s.weak_password}:null),error:r}):{data:{user:null,session:null},error:new A}}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async signInWithOAuth(e){var t,s,r,i;return await this._handleProviderSignIn(e.provider,{redirectTo:null===(t=e.options)||void 0===t?void 0:t.redirectTo,scopes:null===(s=e.options)||void 0===s?void 0:s.scopes,queryParams:null===(r=e.options)||void 0===r?void 0:r.queryParams,skipBrowserRedirect:null===(i=e.options)||void 0===i?void 0:i.skipBrowserRedirect})}async exchangeCodeForSession(e){return await this.initializePromise,this._acquireLock(-1,(async()=>this._exchangeCodeForSession(e)))}async _exchangeCodeForSession(e){const t=await p(this.storage,`${this.storageKey}-code-verifier`),[s,r]=(null!=t?t:"").split("/");try{const{data:t,error:i}=await M(this.fetch,"POST",`${this.url}/token?grant_type=pkce`,{headers:this.headers,body:{auth_code:e,code_verifier:s},xform:B});if(await g(this.storage,`${this.storageKey}-code-verifier`),i)throw i;return t&&t.session&&t.user?(t.session&&(await this._saveSession(t.session),await this._notifyAllSubscribers("SIGNED_IN",t.session)),{data:Object.assign(Object.assign({},t),{redirectType:null!=r?r:null}),error:i}):{data:{user:null,session:null,redirectType:null},error:new A}}catch(e){if(k(e))return{data:{user:null,session:null,redirectType:null},error:e};throw e}}async signInWithIdToken(e){try{const{options:t,provider:s,token:r,access_token:i,nonce:n}=e,o=await M(this.fetch,"POST",`${this.url}/token?grant_type=id_token`,{headers:this.headers,body:{provider:s,id_token:r,access_token:i,nonce:n,gotrue_meta_security:{captcha_token:null==t?void 0:t.captchaToken}},xform:B}),{data:a,error:c}=o;return c?{data:{user:null,session:null},error:c}:a&&a.session&&a.user?(a.session&&(await this._saveSession(a.session),await this._notifyAllSubscribers("SIGNED_IN",a.session)),{data:a,error:c}):{data:{user:null,session:null},error:new A}}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async signInWithOtp(e){var t,s,r,i,n;try{if("email"in e){const{email:r,options:i}=e;let n=null,o=null;"pkce"===this.flowType&&([n,o]=await _(this.storage,this.storageKey));const{error:a}=await M(this.fetch,"POST",`${this.url}/otp`,{headers:this.headers,body:{email:r,data:null!==(t=null==i?void 0:i.data)&&void 0!==t?t:{},create_user:null===(s=null==i?void 0:i.shouldCreateUser)||void 0===s||s,gotrue_meta_security:{captcha_token:null==i?void 0:i.captchaToken},code_challenge:n,code_challenge_method:o},redirectTo:null==i?void 0:i.emailRedirectTo});return{data:{user:null,session:null},error:a}}if("phone"in e){const{phone:t,options:s}=e,{data:o,error:a}=await M(this.fetch,"POST",`${this.url}/otp`,{headers:this.headers,body:{phone:t,data:null!==(r=null==s?void 0:s.data)&&void 0!==r?r:{},create_user:null===(i=null==s?void 0:s.shouldCreateUser)||void 0===i||i,gotrue_meta_security:{captcha_token:null==s?void 0:s.captchaToken},channel:null!==(n=null==s?void 0:s.channel)&&void 0!==n?n:"sms"}});return{data:{user:null,session:null,messageId:null==o?void 0:o.message_id},error:a}}throw new $("You must provide either an email or phone number.")}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async verifyOtp(e){var t,s;try{let r,i;"options"in e&&(r=null===(t=e.options)||void 0===t?void 0:t.redirectTo,i=null===(s=e.options)||void 0===s?void 0:s.captchaToken);const{data:n,error:o}=await M(this.fetch,"POST",`${this.url}/verify`,{headers:this.headers,body:Object.assign(Object.assign({},e),{gotrue_meta_security:{captcha_token:i}}),redirectTo:r,xform:B});if(o)throw o;if(!n)throw new Error("An error occurred on token verification.");const a=n.session,c=n.user;return(null==a?void 0:a.access_token)&&(await this._saveSession(a),await this._notifyAllSubscribers("recovery"==e.type?"PASSWORD_RECOVERY":"SIGNED_IN",a)),{data:{user:c,session:a},error:null}}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async signInWithSSO(e){var t,s,r;try{let i=null,n=null;return"pkce"===this.flowType&&([i,n]=await _(this.storage,this.storageKey)),await M(this.fetch,"POST",`${this.url}/sso`,{body:Object.assign(Object.assign(Object.assign(Object.assign(Object.assign({},"providerId"in e?{provider_id:e.providerId}:null),"domain"in e?{domain:e.domain}:null),{redirect_to:null!==(s=null===(t=e.options)||void 0===t?void 0:t.redirectTo)&&void 0!==s?s:void 0}),(null===(r=null==e?void 0:e.options)||void 0===r?void 0:r.captchaToken)?{gotrue_meta_security:{captcha_token:e.options.captchaToken}}:null),{skip_http_redirect:!0,code_challenge:i,code_challenge_method:n}),headers:this.headers,xform:H})}catch(e){if(k(e))return{data:null,error:e};throw e}}async reauthenticate(){return await this.initializePromise,await this._acquireLock(-1,(async()=>await this._reauthenticate()))}async _reauthenticate(){try{return await this._useSession((async e=>{const{data:{session:t},error:s}=e;if(s)throw s;if(!t)throw new j;const{error:r}=await M(this.fetch,"GET",`${this.url}/reauthenticate`,{headers:this.headers,jwt:t.access_token});return{data:{user:null,session:null},error:r}}))}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async resend(e){try{const t=`${this.url}/resend`;if("email"in e){const{email:s,type:r,options:i}=e,{error:n}=await M(this.fetch,"POST",t,{headers:this.headers,body:{email:s,type:r,gotrue_meta_security:{captcha_token:null==i?void 0:i.captchaToken}},redirectTo:null==i?void 0:i.emailRedirectTo});return{data:{user:null,session:null},error:n}}if("phone"in e){const{phone:s,type:r,options:i}=e,{data:n,error:o}=await M(this.fetch,"POST",t,{headers:this.headers,body:{phone:s,type:r,gotrue_meta_security:{captcha_token:null==i?void 0:i.captchaToken}}});return{data:{user:null,session:null,messageId:null==n?void 0:n.message_id},error:o}}throw new $("You must provide either an email or phone number and a type")}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async getSession(){return await this.initializePromise,await this._acquireLock(-1,(async()=>this._useSession((async e=>e))))}async _acquireLock(e,t){this._debug("#_acquireLock","begin",e);try{if(this.lockAcquired){const e=this.pendingInLock.length?this.pendingInLock[this.pendingInLock.length-1]:Promise.resolve(),s=(async()=>(await e,await t()))();return this.pendingInLock.push((async()=>{try{await s}catch(e){}})()),s}return await this.lock(`lock:${this.storageKey}`,e,(async()=>{this._debug("#_acquireLock","lock acquired for storage key",this.storageKey);try{this.lockAcquired=!0;const e=t();for(this.pendingInLock.push((async()=>{try{await e}catch(e){}})()),await e;this.pendingInLock.length;){const e=[...this.pendingInLock];await Promise.all(e),this.pendingInLock.splice(0,e.length)}return await e}finally{this._debug("#_acquireLock","lock released for storage key",this.storageKey),this.lockAcquired=!1}}))}finally{this._debug("#_acquireLock","end")}}async _useSession(e){this._debug("#_useSession","begin");try{const t=await this.__loadSession();return await e(t)}finally{this._debug("#_useSession","end")}}async __loadSession(){this._debug("#__loadSession()","begin"),this.lockAcquired||this._debug("#__loadSession()","used outside of an acquired lock!",(new Error).stack);try{let e=null;const t=await p(this.storage,this.storageKey);if(this._debug("#getSession()","session from storage",t),null!==t&&(this._isValidSession(t)?e=t:(this._debug("#getSession()","session from storage is not valid"),await this._removeSession())),!e)return{data:{session:null},error:null};const s=!!e.expires_at&&e.expires_at<=Date.now()/1e3;if(this._debug("#__loadSession()",`session has${s?"":" not"} expired`,"expires_at",e.expires_at),!s){if(this.storage.isServer){let t=this.suppressGetSessionWarning;e=new Proxy(e,{get:(e,s,r)=>(t||"user"!==s||(console.warn("Using the user object as returned from supabase.auth.getSession() or from some supabase.auth.onAuthStateChange() events could be insecure! This value comes directly from the storage medium (usually cookies on the server) and many not be authentic. Use supabase.auth.getUser() instead which authenticates the data by contacting the Supabase Auth server."),t=!0,this.suppressGetSessionWarning=!0),Reflect.get(e,s,r))})}return{data:{session:e},error:null}}const{session:r,error:i}=await this._callRefreshToken(e.refresh_token);return i?{data:{session:null},error:i}:{data:{session:r},error:null}}finally{this._debug("#__loadSession()","end")}}async getUser(e){return e?await this._getUser(e):(await this.initializePromise,await this._acquireLock(-1,(async()=>await this._getUser())))}async _getUser(e){try{return e?await M(this.fetch,"GET",`${this.url}/user`,{headers:this.headers,jwt:e,xform:z}):await this._useSession((async e=>{var t,s,r;const{data:i,error:n}=e;if(n)throw n;return(null===(t=i.session)||void 0===t?void 0:t.access_token)||this.hasCustomAuthorizationHeader?await M(this.fetch,"GET",`${this.url}/user`,{headers:this.headers,jwt:null!==(r=null===(s=i.session)||void 0===s?void 0:s.access_token)&&void 0!==r?r:void 0,xform:z}):{data:{user:null},error:new j}}))}catch(e){if(k(e))return P(e)&&(await this._removeSession(),await g(this.storage,`${this.storageKey}-code-verifier`),await this._notifyAllSubscribers("SIGNED_OUT",null)),{data:{user:null},error:e};throw e}}async updateUser(e,t={}){return await this.initializePromise,await this._acquireLock(-1,(async()=>await this._updateUser(e,t)))}async _updateUser(e,t={}){try{return await this._useSession((async s=>{const{data:r,error:i}=s;if(i)throw i;if(!r.session)throw new j;const n=r.session;let o=null,a=null;"pkce"===this.flowType&&null!=e.email&&([o,a]=await _(this.storage,this.storageKey));const{data:c,error:l}=await M(this.fetch,"PUT",`${this.url}/user`,{headers:this.headers,redirectTo:null==t?void 0:t.emailRedirectTo,body:Object.assign(Object.assign({},e),{code_challenge:o,code_challenge_method:a}),jwt:n.access_token,xform:z});if(l)throw l;return n.user=c.user,await this._saveSession(n),await this._notifyAllSubscribers("USER_UPDATED",n),{data:{user:n.user},error:null}}))}catch(e){if(k(e))return{data:{user:null},error:e};throw e}}_decodeJWT(e){return v(e)}async setSession(e){return await this.initializePromise,await this._acquireLock(-1,(async()=>await this._setSession(e)))}async _setSession(e){try{if(!e.access_token||!e.refresh_token)throw new j;const t=Date.now()/1e3;let s=t,r=!0,i=null;const n=v(e.access_token);if(n.exp&&(s=n.exp,r=s<=t),r){const{session:t,error:s}=await this._callRefreshToken(e.refresh_token);if(s)return{data:{user:null,session:null},error:s};if(!t)return{data:{user:null,session:null},error:null};i=t}else{const{data:r,error:n}=await this._getUser(e.access_token);if(n)throw n;i={access_token:e.access_token,refresh_token:e.refresh_token,user:r.user,token_type:"bearer",expires_in:s-t,expires_at:s},await this._saveSession(i),await this._notifyAllSubscribers("SIGNED_IN",i)}return{data:{user:i.user,session:i},error:null}}catch(e){if(k(e))return{data:{session:null,user:null},error:e};throw e}}async refreshSession(e){return await this.initializePromise,await this._acquireLock(-1,(async()=>await this._refreshSession(e)))}async _refreshSession(e){try{return await this._useSession((async t=>{var s;if(!e){const{data:r,error:i}=t;if(i)throw i;e=null!==(s=r.session)&&void 0!==s?s:void 0}if(!(null==e?void 0:e.refresh_token))throw new j;const{session:r,error:i}=await this._callRefreshToken(e.refresh_token);return i?{data:{user:null,session:null},error:i}:r?{data:{user:r.user,session:r},error:null}:{data:{user:null,session:null},error:null}}))}catch(e){if(k(e))return{data:{user:null,session:null},error:e};throw e}}async _getSessionFromURL(e){try{if(!a())throw new x("No browser detected.");if("implicit"===this.flowType&&!this._isImplicitGrantFlow())throw new x("Not a valid implicit grant flow url.");if("pkce"==this.flowType&&!e)throw new C("Not a valid PKCE flow url.");const t=h(window.location.href);if(e){if(!t.code)throw new C("No code detected.");const{data:e,error:s}=await this._exchangeCodeForSession(t.code);if(s)throw s;const r=new URL(window.location.href);return r.searchParams.delete("code"),window.history.replaceState(window.history.state,"",r.toString()),{data:{session:e.session,redirectType:null},error:null}}if(t.error||t.error_description||t.error_code)throw new x(t.error_description||"Error in URL with unspecified error_description",{error:t.error||"unspecified_error",code:t.error_code||"unspecified_code"});const{provider_token:s,provider_refresh_token:r,access_token:i,refresh_token:n,expires_in:o,expires_at:c,token_type:l}=t;if(!(i&&o&&n&&l))throw new x("No session defined in URL");const u=Math.round(Date.now()/1e3),d=parseInt(o);let f=u+d;c&&(f=parseInt(c));const p=f-u;1e3*p<=te&&console.warn(`@supabase/gotrue-js: Session as retrieved from URL expires in ${p}s, should have been closer to ${d}s`);const g=f-d;u-g>=120?console.warn("@supabase/gotrue-js: Session as retrieved from URL was issued over 120s ago, URL could be stale",g,f,u):u-g<0&&console.warn("@supabase/gotrue-js: Session as retrieved from URL was issued in the future? Check the device clock for skew",g,f,u);const{data:y,error:v}=await this._getUser(i);if(v)throw v;const m={provider_token:s,provider_refresh_token:r,access_token:i,expires_in:d,expires_at:f,refresh_token:n,token_type:l,user:y.user};return window.location.hash="",this._debug("#_getSessionFromURL()","clearing window.location.hash"),{data:{session:m,redirectType:t.type},error:null}}catch(e){if(k(e))return{data:{session:null,redirectType:null},error:e};throw e}}_isImplicitGrantFlow(){const e=h(window.location.href);return!(!a()||!e.access_token&&!e.error_description)}async _isPKCEFlow(){const e=h(window.location.href),t=await p(this.storage,`${this.storageKey}-code-verifier`);return!(!e.code||!t)}async signOut(e={scope:"global"}){return await this.initializePromise,await this._acquireLock(-1,(async()=>await this._signOut(e)))}async _signOut({scope:e}={scope:"global"}){return await this._useSession((async t=>{var s;const{data:r,error:i}=t;if(i)return{error:i};const n=null===(s=r.session)||void 0===s?void 0:s.access_token;if(n){const{error:t}=await this.admin.signOut(n,e);if(t&&(!S(t)||404!==t.status&&401!==t.status&&403!==t.status))return{error:t}}return"others"!==e&&(await this._removeSession(),await g(this.storage,`${this.storageKey}-code-verifier`),await this._notifyAllSubscribers("SIGNED_OUT",null)),{error:null}}))}onAuthStateChange(e){const t="xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(function(e){const t=16*Math.random()|0;return("x"==e?t:3&t|8).toString(16)})),s={id:t,callback:e,unsubscribe:()=>{this._debug("#unsubscribe()","state change callback with id removed",t),this.stateChangeEmitters.delete(t)}};return this._debug("#onAuthStateChange()","registered callback with id",t),this.stateChangeEmitters.set(t,s),(async()=>{await this.initializePromise,await this._acquireLock(-1,(async()=>{this._emitInitialSession(t)}))})(),{data:{subscription:s}}}async _emitInitialSession(e){return await this._useSession((async t=>{var s,r;try{const{data:{session:r},error:i}=t;if(i)throw i;await(null===(s=this.stateChangeEmitters.get(e))||void 0===s?void 0:s.callback("INITIAL_SESSION",r)),this._debug("INITIAL_SESSION","callback id",e,"session",r)}catch(t){await(null===(r=this.stateChangeEmitters.get(e))||void 0===r?void 0:r.callback("INITIAL_SESSION",null)),this._debug("INITIAL_SESSION","callback id",e,"error",t),console.error(t)}}))}async resetPasswordForEmail(e,t={}){let s=null,r=null;"pkce"===this.flowType&&([s,r]=await _(this.storage,this.storageKey,!0));try{return await M(this.fetch,"POST",`${this.url}/recover`,{body:{email:e,code_challenge:s,code_challenge_method:r,gotrue_meta_security:{captcha_token:t.captchaToken}},headers:this.headers,redirectTo:t.redirectTo})}catch(e){if(k(e))return{data:null,error:e};throw e}}async getUserIdentities(){var e;try{const{data:t,error:s}=await this.getUser();if(s)throw s;return{data:{identities:null!==(e=t.user.identities)&&void 0!==e?e:[]},error:null}}catch(e){if(k(e))return{data:null,error:e};throw e}}async linkIdentity(e){var t;try{const{data:s,error:r}=await this._useSession((async t=>{var s,r,i,n,o;const{data:a,error:c}=t;if(c)throw c;const l=await this._getUrlForProvider(`${this.url}/user/identities/authorize`,e.provider,{redirectTo:null===(s=e.options)||void 0===s?void 0:s.redirectTo,scopes:null===(r=e.options)||void 0===r?void 0:r.scopes,queryParams:null===(i=e.options)||void 0===i?void 0:i.queryParams,skipBrowserRedirect:!0});return await M(this.fetch,"GET",l,{headers:this.headers,jwt:null!==(o=null===(n=a.session)||void 0===n?void 0:n.access_token)&&void 0!==o?o:void 0})}));if(r)throw r;return a()&&!(null===(t=e.options)||void 0===t?void 0:t.skipBrowserRedirect)&&window.location.assign(null==s?void 0:s.url),{data:{provider:e.provider,url:null==s?void 0:s.url},error:null}}catch(t){if(k(t))return{data:{provider:e.provider,url:null},error:t};throw t}}async unlinkIdentity(e){try{return await this._useSession((async t=>{var s,r;const{data:i,error:n}=t;if(n)throw n;return await M(this.fetch,"DELETE",`${this.url}/user/identities/${e.identity_id}`,{headers:this.headers,jwt:null!==(r=null===(s=i.session)||void 0===s?void 0:s.access_token)&&void 0!==r?r:void 0})}))}catch(e){if(k(e))return{data:null,error:e};throw e}}async _refreshAccessToken(e){const t=`#_refreshAccessToken(${e.substring(0,5)}...)`;this._debug(t,"begin");try{const i=Date.now();return await(s=async s=>(s>0&&await async function(e){return await new Promise((t=>{setTimeout((()=>t(null)),e)}))}(200*Math.pow(2,s-1)),this._debug(t,"refreshing attempt",s),await M(this.fetch,"POST",`${this.url}/token?grant_type=refresh_token`,{body:{refresh_token:e},headers:this.headers,xform:B})),r=(e,t)=>{const s=200*Math.pow(2,e);return t&&I(t)&&Date.now()+s-i<te},new Promise(((e,t)=>{(async()=>{for(let i=0;i<1/0;i++)try{const t=await s(i);if(!r(i,null))return void e(t)}catch(e){if(!r(i,e))return void t(e)}})()})))}catch(e){if(this._debug(t,"error",e),k(e))return{data:{session:null,user:null},error:e};throw e}finally{this._debug(t,"end")}var s,r}_isValidSession(e){return"object"==typeof e&&null!==e&&"access_token"in e&&"refresh_token"in e&&"expires_at"in e}async _handleProviderSignIn(e,t){const s=await this._getUrlForProvider(`${this.url}/authorize`,e,{redirectTo:t.redirectTo,scopes:t.scopes,queryParams:t.queryParams});return this._debug("#_handleProviderSignIn()","provider",e,"options",t,"url",s),a()&&!t.skipBrowserRedirect&&window.location.assign(s),{data:{provider:e,url:s},error:null}}async _recoverAndRefresh(){var e;const t="#_recoverAndRefresh()";this._debug(t,"begin");try{const s=await p(this.storage,this.storageKey);if(this._debug(t,"session from storage",s),!this._isValidSession(s))return this._debug(t,"session is not valid"),void(null!==s&&await this._removeSession());const r=Math.round(Date.now()/1e3),i=(null!==(e=s.expires_at)&&void 0!==e?e:1/0)<r+10;if(this._debug(t,`session has${i?"":" not"} expired with margin of 10s`),i){if(this.autoRefreshToken&&s.refresh_token){const{error:e}=await this._callRefreshToken(s.refresh_token);e&&(console.error(e),I(e)||(this._debug(t,"refresh failed with a non-retryable error, removing the session",e),await this._removeSession()))}}else await this._notifyAllSubscribers("SIGNED_IN",s)}catch(e){return this._debug(t,"error",e),void console.error(e)}finally{this._debug(t,"end")}}async _callRefreshToken(e){var t,s;if(!e)throw new j;if(this.refreshingDeferred)return this.refreshingDeferred.promise;const r=`#_callRefreshToken(${e.substring(0,5)}...)`;this._debug(r,"begin");try{this.refreshingDeferred=new y;const{data:t,error:s}=await this._refreshAccessToken(e);if(s)throw s;if(!t.session)throw new j;await this._saveSession(t.session),await this._notifyAllSubscribers("TOKEN_REFRESHED",t.session);const r={session:t.session,error:null};return this.refreshingDeferred.resolve(r),r}catch(e){if(this._debug(r,"error",e),k(e)){const s={session:null,error:e};return I(e)||(await this._removeSession(),await this._notifyAllSubscribers("SIGNED_OUT",null)),null===(t=this.refreshingDeferred)||void 0===t||t.resolve(s),s}throw null===(s=this.refreshingDeferred)||void 0===s||s.reject(e),e}finally{this.refreshingDeferred=null,this._debug(r,"end")}}async _notifyAllSubscribers(e,t,s=!0){const r=`#_notifyAllSubscribers(${e})`;this._debug(r,"begin",t,`broadcast = ${s}`);try{this.broadcastChannel&&s&&this.broadcastChannel.postMessage({event:e,session:t});const r=[],i=Array.from(this.stateChangeEmitters.values()).map((async s=>{try{await s.callback(e,t)}catch(e){r.push(e)}}));if(await Promise.all(i),r.length>0){for(let e=0;e<r.length;e+=1)console.error(r[e]);throw r[0]}}finally{this._debug(r,"end")}}async _saveSession(e){this._debug("#_saveSession()",e),this.suppressGetSessionWarning=!0,await f(this.storage,this.storageKey,e)}async _removeSession(){this._debug("#_removeSession()"),await g(this.storage,this.storageKey)}_removeVisibilityChangedCallback(){this._debug("#_removeVisibilityChangedCallback()");const e=this.visibilityChangedCallback;this.visibilityChangedCallback=null;try{e&&a()&&(null===window||void 0===window?void 0:window.removeEventListener)&&window.removeEventListener("visibilitychange",e)}catch(e){console.error("removing visibilitychange callback failed",e)}}async _startAutoRefresh(){await this._stopAutoRefresh(),this._debug("#_startAutoRefresh()");const e=setInterval((()=>this._autoRefreshTokenTick()),te);this.autoRefreshTicker=e,e&&"object"==typeof e&&"function"==typeof e.unref?e.unref():"undefined"!=typeof Deno&&"function"==typeof Deno.unrefTimer&&Deno.unrefTimer(e),setTimeout((async()=>{await this.initializePromise,await this._autoRefreshTokenTick()}),0)}async _stopAutoRefresh(){this._debug("#_stopAutoRefresh()");const e=this.autoRefreshTicker;this.autoRefreshTicker=null,e&&clearInterval(e)}async startAutoRefresh(){this._removeVisibilityChangedCallback(),await this._startAutoRefresh()}async stopAutoRefresh(){this._removeVisibilityChangedCallback(),await this._stopAutoRefresh()}async _autoRefreshTokenTick(){this._debug("#_autoRefreshTokenTick()","begin");try{await this._acquireLock(0,(async()=>{try{const e=Date.now();try{return await this._useSession((async t=>{const{data:{session:s}}=t;if(!s||!s.refresh_token||!s.expires_at)return void this._debug("#_autoRefreshTokenTick()","no session");const r=Math.floor((1e3*s.expires_at-e)/te);this._debug("#_autoRefreshTokenTick()",`access token expires in ${r} ticks, a tick lasts 30000ms, refresh threshold is 3 ticks`),r<=3&&await this._callRefreshToken(s.refresh_token)}))}catch(e){console.error("Auto refresh tick failed with error. This is likely a transient error.",e)}}finally{this._debug("#_autoRefreshTokenTick()","end")}}))}catch(e){if(!(e.isAcquireTimeout||e instanceof Q))throw e;this._debug("auto refresh token tick lock not available")}}async _handleVisibilityChange(){if(this._debug("#_handleVisibilityChange()"),!a()||!(null===window||void 0===window?void 0:window.addEventListener))return this.autoRefreshToken&&this.startAutoRefresh(),!1;try{this.visibilityChangedCallback=async()=>await this._onVisibilityChanged(!1),null===window||void 0===window||window.addEventListener("visibilitychange",this.visibilityChangedCallback),await this._onVisibilityChanged(!0)}catch(e){console.error("_handleVisibilityChange",e)}}async _onVisibilityChanged(e){const t=`#_onVisibilityChanged(${e})`;this._debug(t,"visibilityState",document.visibilityState),"visible"===document.visibilityState?(this.autoRefreshToken&&this._startAutoRefresh(),e||(await this.initializePromise,await this._acquireLock(-1,(async()=>{"visible"===document.visibilityState?await this._recoverAndRefresh():this._debug(t,"acquired the lock to recover the session, but the browser visibilityState is no longer visible, aborting")})))):"hidden"===document.visibilityState&&this.autoRefreshToken&&this._stopAutoRefresh()}async _getUrlForProvider(e,t,s){const r=[`provider=${encodeURIComponent(t)}`];if((null==s?void 0:s.redirectTo)&&r.push(`redirect_to=${encodeURIComponent(s.redirectTo)}`),(null==s?void 0:s.scopes)&&r.push(`scopes=${encodeURIComponent(s.scopes)}`),"pkce"===this.flowType){const[e,t]=await _(this.storage,this.storageKey),s=new URLSearchParams({code_challenge:`${encodeURIComponent(e)}`,code_challenge_method:`${encodeURIComponent(t)}`});r.push(s.toString())}if(null==s?void 0:s.queryParams){const e=new URLSearchParams(s.queryParams);r.push(e.toString())}return(null==s?void 0:s.skipBrowserRedirect)&&r.push(`skip_http_redirect=${s.skipBrowserRedirect}`),`${e}?${r.join("&")}`}async _unenroll(e){try{return await this._useSession((async t=>{var s;const{data:r,error:i}=t;return i?{data:null,error:i}:await M(this.fetch,"DELETE",`${this.url}/factors/${e.factorId}`,{headers:this.headers,jwt:null===(s=null==r?void 0:r.session)||void 0===s?void 0:s.access_token})}))}catch(e){if(k(e))return{data:null,error:e};throw e}}async _enroll(e){try{return await this._useSession((async t=>{var s,r;const{data:i,error:n}=t;if(n)return{data:null,error:n};const o=Object.assign({friendly_name:e.friendlyName,factor_type:e.factorType},"phone"===e.factorType?{phone:e.phone}:{issuer:e.issuer}),{data:a,error:c}=await M(this.fetch,"POST",`${this.url}/factors`,{body:o,headers:this.headers,jwt:null===(s=null==i?void 0:i.session)||void 0===s?void 0:s.access_token});return c?{data:null,error:c}:("phone"===e.factorType&&delete a.totp,"totp"===e.factorType&&(null===(r=null==a?void 0:a.totp)||void 0===r?void 0:r.qr_code)&&(a.totp.qr_code=`data:image/svg+xml;utf-8,${a.totp.qr_code}`),{data:a,error:null})}))}catch(e){if(k(e))return{data:null,error:e};throw e}}async _verify(e){return this._acquireLock(-1,(async()=>{try{return await this._useSession((async t=>{var s;const{data:r,error:i}=t;if(i)return{data:null,error:i};const{data:n,error:o}=await M(this.fetch,"POST",`${this.url}/factors/${e.factorId}/verify`,{body:{code:e.code,challenge_id:e.challengeId},headers:this.headers,jwt:null===(s=null==r?void 0:r.session)||void 0===s?void 0:s.access_token});return o?{data:null,error:o}:(await this._saveSession(Object.assign({expires_at:Math.round(Date.now()/1e3)+n.expires_in},n)),await this._notifyAllSubscribers("MFA_CHALLENGE_VERIFIED",n),{data:n,error:o})}))}catch(e){if(k(e))return{data:null,error:e};throw e}}))}async _challenge(e){return this._acquireLock(-1,(async()=>{try{return await this._useSession((async t=>{var s;const{data:r,error:i}=t;return i?{data:null,error:i}:await M(this.fetch,"POST",`${this.url}/factors/${e.factorId}/challenge`,{body:{channel:e.channel},headers:this.headers,jwt:null===(s=null==r?void 0:r.session)||void 0===s?void 0:s.access_token})}))}catch(e){if(k(e))return{data:null,error:e};throw e}}))}async _challengeAndVerify(e){const{data:t,error:s}=await this._challenge({factorId:e.factorId});return s?{data:null,error:s}:await this._verify({factorId:e.factorId,challengeId:t.id,code:e.code})}async _listFactors(){const{data:{user:e},error:t}=await this.getUser();if(t)return{data:null,error:t};const s=(null==e?void 0:e.factors)||[],r=s.filter((e=>"totp"===e.factor_type&&"verified"===e.status)),i=s.filter((e=>"phone"===e.factor_type&&"verified"===e.status));return{data:{all:s,totp:r,phone:i},error:null}}async _getAuthenticatorAssuranceLevel(){return this._acquireLock(-1,(async()=>await this._useSession((async e=>{var t,s;const{data:{session:r},error:i}=e;if(i)return{data:null,error:i};if(!r)return{data:{currentLevel:null,nextLevel:null,currentAuthenticationMethods:[]},error:null};const n=this._decodeJWT(r.access_token);let o=null;n.aal&&(o=n.aal);let a=o;return(null!==(s=null===(t=r.user.factors)||void 0===t?void 0:t.filter((e=>"verified"===e.status)))&&void 0!==s?s:[]).length>0&&(a="aal2"),{data:{currentLevel:o,nextLevel:a,currentAuthenticationMethods:n.amr||[]},error:null}}))))}}re.nextInstanceID=0;const ie=K,ne=re},227:(e,t,s)=>{s.r(t),s.d(t,{FunctionRegion:()=>a,FunctionsClient:()=>c,FunctionsError:()=>r,FunctionsFetchError:()=>i,FunctionsHttpError:()=>o,FunctionsRelayError:()=>n});class r extends Error{constructor(e,t="FunctionsError",s){super(e),this.name=t,this.context=s}}class i extends r{constructor(e){super("Failed to send a request to the Edge Function","FunctionsFetchError",e)}}class n extends r{constructor(e){super("Relay Error invoking the Edge Function","FunctionsRelayError",e)}}class o extends r{constructor(e){super("Edge Function returned a non-2xx status code","FunctionsHttpError",e)}}var a;!function(e){e.Any="any",e.ApNortheast1="ap-northeast-1",e.ApNortheast2="ap-northeast-2",e.ApSouth1="ap-south-1",e.ApSoutheast1="ap-southeast-1",e.ApSoutheast2="ap-southeast-2",e.CaCentral1="ca-central-1",e.EuCentral1="eu-central-1",e.EuWest1="eu-west-1",e.EuWest2="eu-west-2",e.EuWest3="eu-west-3",e.SaEast1="sa-east-1",e.UsEast1="us-east-1",e.UsWest1="us-west-1",e.UsWest2="us-west-2"}(a||(a={}));class c{constructor(e,{headers:t={},customFetch:r,region:i=a.Any}={}){this.url=e,this.headers=t,this.region=i,this.fetch=(e=>{let t;return t=e||("undefined"==typeof fetch?(...e)=>Promise.resolve().then(s.bind(s,907)).then((({default:t})=>t(...e))):fetch),(...e)=>t(...e)})(r)}setAuth(e){this.headers.Authorization=`Bearer ${e}`}invoke(e,t={}){var s,r,a,c,l;return r=this,a=void 0,l=function*(){try{const{headers:r,method:a,body:c}=t;let l,h={},{region:u}=t;u||(u=this.region),u&&"any"!==u&&(h["x-region"]=u),c&&(r&&!Object.prototype.hasOwnProperty.call(r,"Content-Type")||!r)&&("undefined"!=typeof Blob&&c instanceof Blob||c instanceof ArrayBuffer?(h["Content-Type"]="application/octet-stream",l=c):"string"==typeof c?(h["Content-Type"]="text/plain",l=c):"undefined"!=typeof FormData&&c instanceof FormData?l=c:(h["Content-Type"]="application/json",l=JSON.stringify(c)));const d=yield this.fetch(`${this.url}/${e}`,{method:a||"POST",headers:Object.assign(Object.assign(Object.assign({},h),this.headers),r),body:l}).catch((e=>{throw new i(e)})),f=d.headers.get("x-relay-error");if(f&&"true"===f)throw new n(d);if(!d.ok)throw new o(d);let p,g=(null!==(s=d.headers.get("Content-Type"))&&void 0!==s?s:"text/plain").split(";")[0].trim();return p="application/json"===g?yield d.json():"application/octet-stream"===g?yield d.blob():"text/event-stream"===g?d:"multipart/form-data"===g?yield d.formData():yield d.text(),{data:p,error:null}}catch(e){return{data:null,error:e}}},new((c=void 0)||(c=Promise))((function(e,t){function s(e){try{n(l.next(e))}catch(e){t(e)}}function i(e){try{n(l.throw(e))}catch(e){t(e)}}function n(t){var r;t.done?e(t.value):(r=t.value,r instanceof c?r:new c((function(e){e(r)}))).then(s,i)}n((l=l.apply(r,a||[])).next())}))}}},907:(e,t,s)=>{s.r(t),s.d(t,{Headers:()=>o,Request:()=>a,Response:()=>c,default:()=>n,fetch:()=>i});var r=function(){if("undefined"!=typeof self)return self;if("undefined"!=typeof window)return window;if(void 0!==s.g)return s.g;throw new Error("unable to locate global object")}();const i=r.fetch,n=r.fetch.bind(r),o=r.Headers,a=r.Request,c=r.Response},660:function(e,t,s){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0});const i=r(s(907)),n=r(s(818));t.default=class{constructor(e){this.shouldThrowOnError=!1,this.method=e.method,this.url=e.url,this.headers=e.headers,this.schema=e.schema,this.body=e.body,this.shouldThrowOnError=e.shouldThrowOnError,this.signal=e.signal,this.isMaybeSingle=e.isMaybeSingle,e.fetch?this.fetch=e.fetch:"undefined"==typeof fetch?this.fetch=i.default:this.fetch=fetch}throwOnError(){return this.shouldThrowOnError=!0,this}setHeader(e,t){return this.headers=Object.assign({},this.headers),this.headers[e]=t,this}then(e,t){void 0===this.schema||(["GET","HEAD"].includes(this.method)?this.headers["Accept-Profile"]=this.schema:this.headers["Content-Profile"]=this.schema),"GET"!==this.method&&"HEAD"!==this.method&&(this.headers["Content-Type"]="application/json");let s=(0,this.fetch)(this.url.toString(),{method:this.method,headers:this.headers,body:JSON.stringify(this.body),signal:this.signal}).then((async e=>{var t,s,r;let i=null,o=null,a=null,c=e.status,l=e.statusText;if(e.ok){if("HEAD"!==this.method){const t=await e.text();""===t||(o="text/csv"===this.headers.Accept||this.headers.Accept&&this.headers.Accept.includes("application/vnd.pgrst.plan+text")?t:JSON.parse(t))}const r=null===(t=this.headers.Prefer)||void 0===t?void 0:t.match(/count=(exact|planned|estimated)/),n=null===(s=e.headers.get("content-range"))||void 0===s?void 0:s.split("/");r&&n&&n.length>1&&(a=parseInt(n[1])),this.isMaybeSingle&&"GET"===this.method&&Array.isArray(o)&&(o.length>1?(i={code:"PGRST116",details:`Results contain ${o.length} rows, application/vnd.pgrst.object+json requires 1 row`,hint:null,message:"JSON object requested, multiple (or no) rows returned"},o=null,a=null,c=406,l="Not Acceptable"):o=1===o.length?o[0]:null)}else{const t=await e.text();try{i=JSON.parse(t),Array.isArray(i)&&404===e.status&&(o=[],i=null,c=200,l="OK")}catch(s){404===e.status&&""===t?(c=204,l="No Content"):i={message:t}}if(i&&this.isMaybeSingle&&(null===(r=null==i?void 0:i.details)||void 0===r?void 0:r.includes("0 rows"))&&(i=null,c=200,l="OK"),i&&this.shouldThrowOnError)throw new n.default(i)}return{error:i,data:o,count:a,status:c,statusText:l}}));return this.shouldThrowOnError||(s=s.catch((e=>{var t,s,r;return{error:{message:`${null!==(t=null==e?void 0:e.name)&&void 0!==t?t:"FetchError"}: ${null==e?void 0:e.message}`,details:`${null!==(s=null==e?void 0:e.stack)&&void 0!==s?s:""}`,hint:"",code:`${null!==(r=null==e?void 0:e.code)&&void 0!==r?r:""}`},data:null,count:null,status:0,statusText:""}}))),s.then(e,t)}}},961:function(e,t,s){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0});const i=r(s(45)),n=r(s(825)),o=s(530);class a{constructor(e,{headers:t={},schema:s,fetch:r}={}){this.url=e,this.headers=Object.assign(Object.assign({},o.DEFAULT_HEADERS),t),this.schemaName=s,this.fetch=r}from(e){const t=new URL(`${this.url}/${e}`);return new i.default(t,{headers:Object.assign({},this.headers),schema:this.schemaName,fetch:this.fetch})}schema(e){return new a(this.url,{headers:this.headers,schema:e,fetch:this.fetch})}rpc(e,t={},{head:s=!1,get:r=!1,count:i}={}){let o;const a=new URL(`${this.url}/rpc/${e}`);let c;s||r?(o=s?"HEAD":"GET",Object.entries(t).filter((([e,t])=>void 0!==t)).map((([e,t])=>[e,Array.isArray(t)?`{${t.join(",")}}`:`${t}`])).forEach((([e,t])=>{a.searchParams.append(e,t)}))):(o="POST",c=t);const l=Object.assign({},this.headers);return i&&(l.Prefer=`count=${i}`),new n.default({method:o,url:a,headers:l,schema:this.schemaName,body:c,fetch:this.fetch,allowEmpty:!1})}}t.default=a},818:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0});class s extends Error{constructor(e){super(e.message),this.name="PostgrestError",this.details=e.details,this.hint=e.hint,this.code=e.code}}t.default=s},825:function(e,t,s){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0});const i=r(s(261));class n extends i.default{eq(e,t){return this.url.searchParams.append(e,`eq.${t}`),this}neq(e,t){return this.url.searchParams.append(e,`neq.${t}`),this}gt(e,t){return this.url.searchParams.append(e,`gt.${t}`),this}gte(e,t){return this.url.searchParams.append(e,`gte.${t}`),this}lt(e,t){return this.url.searchParams.append(e,`lt.${t}`),this}lte(e,t){return this.url.searchParams.append(e,`lte.${t}`),this}like(e,t){return this.url.searchParams.append(e,`like.${t}`),this}likeAllOf(e,t){return this.url.searchParams.append(e,`like(all).{${t.join(",")}}`),this}likeAnyOf(e,t){return this.url.searchParams.append(e,`like(any).{${t.join(",")}}`),this}ilike(e,t){return this.url.searchParams.append(e,`ilike.${t}`),this}ilikeAllOf(e,t){return this.url.searchParams.append(e,`ilike(all).{${t.join(",")}}`),this}ilikeAnyOf(e,t){return this.url.searchParams.append(e,`ilike(any).{${t.join(",")}}`),this}is(e,t){return this.url.searchParams.append(e,`is.${t}`),this}in(e,t){const s=Array.from(new Set(t)).map((e=>"string"==typeof e&&new RegExp("[,()]").test(e)?`"${e}"`:`${e}`)).join(",");return this.url.searchParams.append(e,`in.(${s})`),this}contains(e,t){return"string"==typeof t?this.url.searchParams.append(e,`cs.${t}`):Array.isArray(t)?this.url.searchParams.append(e,`cs.{${t.join(",")}}`):this.url.searchParams.append(e,`cs.${JSON.stringify(t)}`),this}containedBy(e,t){return"string"==typeof t?this.url.searchParams.append(e,`cd.${t}`):Array.isArray(t)?this.url.searchParams.append(e,`cd.{${t.join(",")}}`):this.url.searchParams.append(e,`cd.${JSON.stringify(t)}`),this}rangeGt(e,t){return this.url.searchParams.append(e,`sr.${t}`),this}rangeGte(e,t){return this.url.searchParams.append(e,`nxl.${t}`),this}rangeLt(e,t){return this.url.searchParams.append(e,`sl.${t}`),this}rangeLte(e,t){return this.url.searchParams.append(e,`nxr.${t}`),this}rangeAdjacent(e,t){return this.url.searchParams.append(e,`adj.${t}`),this}overlaps(e,t){return"string"==typeof t?this.url.searchParams.append(e,`ov.${t}`):this.url.searchParams.append(e,`ov.{${t.join(",")}}`),this}textSearch(e,t,{config:s,type:r}={}){let i="";"plain"===r?i="pl":"phrase"===r?i="ph":"websearch"===r&&(i="w");const n=void 0===s?"":`(${s})`;return this.url.searchParams.append(e,`${i}fts${n}.${t}`),this}match(e){return Object.entries(e).forEach((([e,t])=>{this.url.searchParams.append(e,`eq.${t}`)})),this}not(e,t,s){return this.url.searchParams.append(e,`not.${t}.${s}`),this}or(e,{foreignTable:t,referencedTable:s=t}={}){const r=s?`${s}.or`:"or";return this.url.searchParams.append(r,`(${e})`),this}filter(e,t,s){return this.url.searchParams.append(e,`${t}.${s}`),this}}t.default=n},45:function(e,t,s){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0});const i=r(s(825));t.default=class{constructor(e,{headers:t={},schema:s,fetch:r}){this.url=e,this.headers=t,this.schema=s,this.fetch=r}select(e,{head:t=!1,count:s}={}){const r=t?"HEAD":"GET";let n=!1;const o=(null!=e?e:"*").split("").map((e=>/\s/.test(e)&&!n?"":('"'===e&&(n=!n),e))).join("");return this.url.searchParams.set("select",o),s&&(this.headers.Prefer=`count=${s}`),new i.default({method:r,url:this.url,headers:this.headers,schema:this.schema,fetch:this.fetch,allowEmpty:!1})}insert(e,{count:t,defaultToNull:s=!0}={}){const r=[];if(this.headers.Prefer&&r.push(this.headers.Prefer),t&&r.push(`count=${t}`),s||r.push("missing=default"),this.headers.Prefer=r.join(","),Array.isArray(e)){const t=e.reduce(((e,t)=>e.concat(Object.keys(t))),[]);if(t.length>0){const e=[...new Set(t)].map((e=>`"${e}"`));this.url.searchParams.set("columns",e.join(","))}}return new i.default({method:"POST",url:this.url,headers:this.headers,schema:this.schema,body:e,fetch:this.fetch,allowEmpty:!1})}upsert(e,{onConflict:t,ignoreDuplicates:s=!1,count:r,defaultToNull:n=!0}={}){const o=[`resolution=${s?"ignore":"merge"}-duplicates`];if(void 0!==t&&this.url.searchParams.set("on_conflict",t),this.headers.Prefer&&o.push(this.headers.Prefer),r&&o.push(`count=${r}`),n||o.push("missing=default"),this.headers.Prefer=o.join(","),Array.isArray(e)){const t=e.reduce(((e,t)=>e.concat(Object.keys(t))),[]);if(t.length>0){const e=[...new Set(t)].map((e=>`"${e}"`));this.url.searchParams.set("columns",e.join(","))}}return new i.default({method:"POST",url:this.url,headers:this.headers,schema:this.schema,body:e,fetch:this.fetch,allowEmpty:!1})}update(e,{count:t}={}){const s=[];return this.headers.Prefer&&s.push(this.headers.Prefer),t&&s.push(`count=${t}`),this.headers.Prefer=s.join(","),new i.default({method:"PATCH",url:this.url,headers:this.headers,schema:this.schema,body:e,fetch:this.fetch,allowEmpty:!1})}delete({count:e}={}){const t=[];return e&&t.push(`count=${e}`),this.headers.Prefer&&t.unshift(this.headers.Prefer),this.headers.Prefer=t.join(","),new i.default({method:"DELETE",url:this.url,headers:this.headers,schema:this.schema,fetch:this.fetch,allowEmpty:!1})}}},261:function(e,t,s){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0});const i=r(s(660));class n extends i.default{select(e){let t=!1;const s=(null!=e?e:"*").split("").map((e=>/\s/.test(e)&&!t?"":('"'===e&&(t=!t),e))).join("");return this.url.searchParams.set("select",s),this.headers.Prefer&&(this.headers.Prefer+=","),this.headers.Prefer+="return=representation",this}order(e,{ascending:t=!0,nullsFirst:s,foreignTable:r,referencedTable:i=r}={}){const n=i?`${i}.order`:"order",o=this.url.searchParams.get(n);return this.url.searchParams.set(n,`${o?`${o},`:""}${e}.${t?"asc":"desc"}${void 0===s?"":s?".nullsfirst":".nullslast"}`),this}limit(e,{foreignTable:t,referencedTable:s=t}={}){const r=void 0===s?"limit":`${s}.limit`;return this.url.searchParams.set(r,`${e}`),this}range(e,t,{foreignTable:s,referencedTable:r=s}={}){const i=void 0===r?"offset":`${r}.offset`,n=void 0===r?"limit":`${r}.limit`;return this.url.searchParams.set(i,`${e}`),this.url.searchParams.set(n,""+(t-e+1)),this}abortSignal(e){return this.signal=e,this}single(){return this.headers.Accept="application/vnd.pgrst.object+json",this}maybeSingle(){return"GET"===this.method?this.headers.Accept="application/json":this.headers.Accept="application/vnd.pgrst.object+json",this.isMaybeSingle=!0,this}csv(){return this.headers.Accept="text/csv",this}geojson(){return this.headers.Accept="application/geo+json",this}explain({analyze:e=!1,verbose:t=!1,settings:s=!1,buffers:r=!1,wal:i=!1,format:n="text"}={}){var o;const a=[e?"analyze":null,t?"verbose":null,s?"settings":null,r?"buffers":null,i?"wal":null].filter(Boolean).join("|"),c=null!==(o=this.headers.Accept)&&void 0!==o?o:"application/json";return this.headers.Accept=`application/vnd.pgrst.plan+${n}; for="${c}"; options=${a};`,this}rollback(){var e;return(null!==(e=this.headers.Prefer)&&void 0!==e?e:"").trim().length>0?this.headers.Prefer+=",tx=rollback":this.headers.Prefer="tx=rollback",this}returns(){return this}}t.default=n},530:(e,t,s)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.DEFAULT_HEADERS=void 0;const r=s(519);t.DEFAULT_HEADERS={"X-Client-Info":`postgrest-js/${r.version}`}},279:function(e,t,s){var r=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0}),t.PostgrestBuilder=t.PostgrestTransformBuilder=t.PostgrestFilterBuilder=t.PostgrestQueryBuilder=t.PostgrestClient=void 0;const i=r(s(961));t.PostgrestClient=i.default;const n=r(s(45));t.PostgrestQueryBuilder=n.default;const o=r(s(825));t.PostgrestFilterBuilder=o.default;const a=r(s(261));t.PostgrestTransformBuilder=a.default;const c=r(s(660));t.PostgrestBuilder=c.default,t.default={PostgrestClient:i.default,PostgrestQueryBuilder:n.default,PostgrestFilterBuilder:o.default,PostgrestTransformBuilder:a.default,PostgrestBuilder:c.default}},519:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.version=void 0,t.version="2.45.4"},932:(e,t,s)=>{s.r(t),s.d(t,{REALTIME_CHANNEL_STATES:()=>P,REALTIME_LISTEN_TYPES:()=>E,REALTIME_POSTGRES_CHANGES_LISTEN_EVENT:()=>S,REALTIME_PRESENCE_LISTEN_EVENTS:()=>T,REALTIME_SUBSCRIBE_STATES:()=>O,RealtimeChannel:()=>A,RealtimeClient:()=>C,RealtimePresence:()=>j});const r={"X-Client-Info":"realtime-js/2.10.2"};var i,n,o,a,c,l;!function(e){e[e.connecting=0]="connecting",e[e.open=1]="open",e[e.closing=2]="closing",e[e.closed=3]="closed"}(i||(i={})),function(e){e.closed="closed",e.errored="errored",e.joined="joined",e.joining="joining",e.leaving="leaving"}(n||(n={})),function(e){e.close="phx_close",e.error="phx_error",e.join="phx_join",e.reply="phx_reply",e.leave="phx_leave",e.access_token="access_token"}(o||(o={})),function(e){e.websocket="websocket"}(a||(a={})),function(e){e.Connecting="connecting",e.Open="open",e.Closing="closing",e.Closed="closed"}(c||(c={}));class h{constructor(){this.HEADER_LENGTH=1}decode(e,t){return e.constructor===ArrayBuffer?t(this._binaryDecode(e)):t("string"==typeof e?JSON.parse(e):{})}_binaryDecode(e){const t=new DataView(e),s=new TextDecoder;return this._decodeBroadcast(e,t,s)}_decodeBroadcast(e,t,s){const r=t.getUint8(1),i=t.getUint8(2);let n=this.HEADER_LENGTH+2;const o=s.decode(e.slice(n,n+r));n+=r;const a=s.decode(e.slice(n,n+i));return n+=i,{ref:null,topic:o,event:a,payload:JSON.parse(s.decode(e.slice(n,e.byteLength)))}}}class u{constructor(e,t){this.callback=e,this.timerCalc=t,this.timer=void 0,this.tries=0,this.callback=e,this.timerCalc=t}reset(){this.tries=0,clearTimeout(this.timer)}scheduleTimeout(){clearTimeout(this.timer),this.timer=setTimeout((()=>{this.tries=this.tries+1,this.callback()}),this.timerCalc(this.tries+1))}}!function(e){e.abstime="abstime",e.bool="bool",e.date="date",e.daterange="daterange",e.float4="float4",e.float8="float8",e.int2="int2",e.int4="int4",e.int4range="int4range",e.int8="int8",e.int8range="int8range",e.json="json",e.jsonb="jsonb",e.money="money",e.numeric="numeric",e.oid="oid",e.reltime="reltime",e.text="text",e.time="time",e.timestamp="timestamp",e.timestamptz="timestamptz",e.timetz="timetz",e.tsrange="tsrange",e.tstzrange="tstzrange"}(l||(l={}));const d=(e,t,s={})=>{var r;const i=null!==(r=s.skipTypes)&&void 0!==r?r:[];return Object.keys(t).reduce(((s,r)=>(s[r]=f(r,e,t,i),s)),{})},f=(e,t,s,r)=>{const i=t.find((t=>t.name===e)),n=null==i?void 0:i.type,o=s[e];return n&&!r.includes(n)?p(n,o):g(o)},p=(e,t)=>{if("_"===e.charAt(0)){const s=e.slice(1,e.length);return _(t,s)}switch(e){case l.bool:return y(t);case l.float4:case l.float8:case l.int2:case l.int4:case l.int8:case l.numeric:case l.oid:return v(t);case l.json:case l.jsonb:return m(t);case l.timestamp:return b(t);case l.abstime:case l.date:case l.daterange:case l.int4range:case l.int8range:case l.money:case l.reltime:case l.text:case l.time:case l.timestamptz:case l.timetz:case l.tsrange:case l.tstzrange:default:return g(t)}},g=e=>e,y=e=>{switch(e){case"t":return!0;case"f":return!1;default:return e}},v=e=>{if("string"==typeof e){const t=parseFloat(e);if(!Number.isNaN(t))return t}return e},m=e=>{if("string"==typeof e)try{return JSON.parse(e)}catch(t){return console.log(`JSON parse error: ${t}`),e}return e},_=(e,t)=>{if("string"!=typeof e)return e;const s=e.length-1,r=e[s];if("{"===e[0]&&"}"===r){let r;const i=e.slice(1,s);try{r=JSON.parse("["+i+"]")}catch(e){r=i?i.split(","):[]}return r.map((e=>p(t,e)))}return e},b=e=>"string"==typeof e?e.replace(" ","T"):e,w=e=>{let t=e;return t=t.replace(/^ws/i,"http"),t=t.replace(/(\/socket\/websocket|\/socket|\/websocket)\/?$/i,""),t.replace(/\/+$/,"")};class k{constructor(e,t,s={},r=1e4){this.channel=e,this.event=t,this.payload=s,this.timeout=r,this.sent=!1,this.timeoutTimer=void 0,this.ref="",this.receivedResp=null,this.recHooks=[],this.refEvent=null}resend(e){this.timeout=e,this._cancelRefEvent(),this.ref="",this.refEvent=null,this.receivedResp=null,this.sent=!1,this.send()}send(){this._hasReceived("timeout")||(this.startTimeout(),this.sent=!0,this.channel.socket.push({topic:this.channel.topic,event:this.event,payload:this.payload,ref:this.ref,join_ref:this.channel._joinRef()}))}updatePayload(e){this.payload=Object.assign(Object.assign({},this.payload),e)}receive(e,t){var s;return this._hasReceived(e)&&t(null===(s=this.receivedResp)||void 0===s?void 0:s.response),this.recHooks.push({status:e,callback:t}),this}startTimeout(){this.timeoutTimer||(this.ref=this.channel.socket._makeRef(),this.refEvent=this.channel._replyEventName(this.ref),this.channel._on(this.refEvent,{},(e=>{this._cancelRefEvent(),this._cancelTimeout(),this.receivedResp=e,this._matchReceive(e)})),this.timeoutTimer=setTimeout((()=>{this.trigger("timeout",{})}),this.timeout))}trigger(e,t){this.refEvent&&this.channel._trigger(this.refEvent,{status:e,response:t})}destroy(){this._cancelRefEvent(),this._cancelTimeout()}_cancelRefEvent(){this.refEvent&&this.channel._off(this.refEvent,{})}_cancelTimeout(){clearTimeout(this.timeoutTimer),this.timeoutTimer=void 0}_matchReceive({status:e,response:t}){this.recHooks.filter((t=>t.status===e)).forEach((e=>e.callback(t)))}_hasReceived(e){return this.receivedResp&&this.receivedResp.status===e}}var T,S,E,O;!function(e){e.SYNC="sync",e.JOIN="join",e.LEAVE="leave"}(T||(T={}));class j{constructor(e,t){this.channel=e,this.state={},this.pendingDiffs=[],this.joinRef=null,this.caller={onJoin:()=>{},onLeave:()=>{},onSync:()=>{}};const s=(null==t?void 0:t.events)||{state:"presence_state",diff:"presence_diff"};this.channel._on(s.state,{},(e=>{const{onJoin:t,onLeave:s,onSync:r}=this.caller;this.joinRef=this.channel._joinRef(),this.state=j.syncState(this.state,e,t,s),this.pendingDiffs.forEach((e=>{this.state=j.syncDiff(this.state,e,t,s)})),this.pendingDiffs=[],r()})),this.channel._on(s.diff,{},(e=>{const{onJoin:t,onLeave:s,onSync:r}=this.caller;this.inPendingSyncState()?this.pendingDiffs.push(e):(this.state=j.syncDiff(this.state,e,t,s),r())})),this.onJoin(((e,t,s)=>{this.channel._trigger("presence",{event:"join",key:e,currentPresences:t,newPresences:s})})),this.onLeave(((e,t,s)=>{this.channel._trigger("presence",{event:"leave",key:e,currentPresences:t,leftPresences:s})})),this.onSync((()=>{this.channel._trigger("presence",{event:"sync"})}))}static syncState(e,t,s,r){const i=this.cloneDeep(e),n=this.transformState(t),o={},a={};return this.map(i,((e,t)=>{n[e]||(a[e]=t)})),this.map(n,((e,t)=>{const s=i[e];if(s){const r=t.map((e=>e.presence_ref)),i=s.map((e=>e.presence_ref)),n=t.filter((e=>i.indexOf(e.presence_ref)<0)),c=s.filter((e=>r.indexOf(e.presence_ref)<0));n.length>0&&(o[e]=n),c.length>0&&(a[e]=c)}else o[e]=t})),this.syncDiff(i,{joins:o,leaves:a},s,r)}static syncDiff(e,t,s,r){const{joins:i,leaves:n}={joins:this.transformState(t.joins),leaves:this.transformState(t.leaves)};return s||(s=()=>{}),r||(r=()=>{}),this.map(i,((t,r)=>{var i;const n=null!==(i=e[t])&&void 0!==i?i:[];if(e[t]=this.cloneDeep(r),n.length>0){const s=e[t].map((e=>e.presence_ref)),r=n.filter((e=>s.indexOf(e.presence_ref)<0));e[t].unshift(...r)}s(t,n,r)})),this.map(n,((t,s)=>{let i=e[t];if(!i)return;const n=s.map((e=>e.presence_ref));i=i.filter((e=>n.indexOf(e.presence_ref)<0)),e[t]=i,r(t,i,s),0===i.length&&delete e[t]})),e}static map(e,t){return Object.getOwnPropertyNames(e).map((s=>t(s,e[s])))}static transformState(e){return e=this.cloneDeep(e),Object.getOwnPropertyNames(e).reduce(((t,s)=>{const r=e[s];return t[s]="metas"in r?r.metas.map((e=>(e.presence_ref=e.phx_ref,delete e.phx_ref,delete e.phx_ref_prev,e))):r,t}),{})}static cloneDeep(e){return JSON.parse(JSON.stringify(e))}onJoin(e){this.caller.onJoin=e}onLeave(e){this.caller.onLeave=e}onSync(e){this.caller.onSync=e}inPendingSyncState(){return!this.joinRef||this.joinRef!==this.channel._joinRef()}}!function(e){e.ALL="*",e.INSERT="INSERT",e.UPDATE="UPDATE",e.DELETE="DELETE"}(S||(S={})),function(e){e.BROADCAST="broadcast",e.PRESENCE="presence",e.POSTGRES_CHANGES="postgres_changes"}(E||(E={})),function(e){e.SUBSCRIBED="SUBSCRIBED",e.TIMED_OUT="TIMED_OUT",e.CLOSED="CLOSED",e.CHANNEL_ERROR="CHANNEL_ERROR"}(O||(O={}));const P=n;class A{constructor(e,t={config:{}},s){this.topic=e,this.params=t,this.socket=s,this.bindings={},this.state=n.closed,this.joinedOnce=!1,this.pushBuffer=[],this.subTopic=e.replace(/^realtime:/i,""),this.params.config=Object.assign({broadcast:{ack:!1,self:!1},presence:{key:""},private:!1},t.config),this.timeout=this.socket.timeout,this.joinPush=new k(this,o.join,this.params,this.timeout),this.rejoinTimer=new u((()=>this._rejoinUntilConnected()),this.socket.reconnectAfterMs),this.joinPush.receive("ok",(()=>{this.state=n.joined,this.rejoinTimer.reset(),this.pushBuffer.forEach((e=>e.send())),this.pushBuffer=[]})),this._onClose((()=>{this.rejoinTimer.reset(),this.socket.log("channel",`close ${this.topic} ${this._joinRef()}`),this.state=n.closed,this.socket._remove(this)})),this._onError((e=>{this._isLeaving()||this._isClosed()||(this.socket.log("channel",`error ${this.topic}`,e),this.state=n.errored,this.rejoinTimer.scheduleTimeout())})),this.joinPush.receive("timeout",(()=>{this._isJoining()&&(this.socket.log("channel",`timeout ${this.topic}`,this.joinPush.timeout),this.state=n.errored,this.rejoinTimer.scheduleTimeout())})),this._on(o.reply,{},((e,t)=>{this._trigger(this._replyEventName(t),e)})),this.presence=new j(this),this.broadcastEndpointURL=w(this.socket.endPoint)+"/api/broadcast"}subscribe(e,t=this.timeout){var s,r;if(this.socket.isConnected()||this.socket.connect(),this.joinedOnce)throw"tried to subscribe multiple times. 'subscribe' can only be called a single time per channel instance";{const{config:{broadcast:i,presence:n,private:o}}=this.params;this._onError((t=>e&&e("CHANNEL_ERROR",t))),this._onClose((()=>e&&e("CLOSED")));const a={},c={broadcast:i,presence:n,postgres_changes:null!==(r=null===(s=this.bindings.postgres_changes)||void 0===s?void 0:s.map((e=>e.filter)))&&void 0!==r?r:[],private:o};this.socket.accessToken&&(a.access_token=this.socket.accessToken),this.updateJoinPayload(Object.assign({config:c},a)),this.joinedOnce=!0,this._rejoin(t),this.joinPush.receive("ok",(({postgres_changes:t})=>{var s;if(this.socket.accessToken&&this.socket.setAuth(this.socket.accessToken),void 0!==t){const r=this.bindings.postgres_changes,i=null!==(s=null==r?void 0:r.length)&&void 0!==s?s:0,n=[];for(let s=0;s<i;s++){const i=r[s],{filter:{event:o,schema:a,table:c,filter:l}}=i,h=t&&t[s];if(!h||h.event!==o||h.schema!==a||h.table!==c||h.filter!==l)return this.unsubscribe(),void(e&&e("CHANNEL_ERROR",new Error("mismatch between server and client bindings for postgres changes")));n.push(Object.assign(Object.assign({},i),{id:h.id}))}return this.bindings.postgres_changes=n,void(e&&e("SUBSCRIBED"))}e&&e("SUBSCRIBED")})).receive("error",(t=>{e&&e("CHANNEL_ERROR",new Error(JSON.stringify(Object.values(t).join(", ")||"error")))})).receive("timeout",(()=>{e&&e("TIMED_OUT")}))}return this}presenceState(){return this.presence.state}async track(e,t={}){return await this.send({type:"presence",event:"track",payload:e},t.timeout||this.timeout)}async untrack(e={}){return await this.send({type:"presence",event:"untrack"},e)}on(e,t,s){return this._on(e,t,s)}async send(e,t={}){var s,r;if(this._canPush()||"broadcast"!==e.type)return new Promise((s=>{var r,i,n;const o=this._push(e.type,e,t.timeout||this.timeout);"broadcast"!==e.type||(null===(n=null===(i=null===(r=this.params)||void 0===r?void 0:r.config)||void 0===i?void 0:i.broadcast)||void 0===n?void 0:n.ack)||s("ok"),o.receive("ok",(()=>s("ok"))),o.receive("error",(()=>s("error"))),o.receive("timeout",(()=>s("timed out")))}));{const{event:i,payload:n}=e,o={method:"POST",headers:{Authorization:this.socket.accessToken?`Bearer ${this.socket.accessToken}`:"",apikey:this.socket.apiKey?this.socket.apiKey:"","Content-Type":"application/json"},body:JSON.stringify({messages:[{topic:this.subTopic,event:i,payload:n}]})};try{const e=await this._fetchWithTimeout(this.broadcastEndpointURL,o,null!==(s=t.timeout)&&void 0!==s?s:this.timeout);return await(null===(r=e.body)||void 0===r?void 0:r.cancel()),e.ok?"ok":"error"}catch(e){return"AbortError"===e.name?"timed out":"error"}}}updateJoinPayload(e){this.joinPush.updatePayload(e)}unsubscribe(e=this.timeout){this.state=n.leaving;const t=()=>{this.socket.log("channel",`leave ${this.topic}`),this._trigger(o.close,"leave",this._joinRef())};return this.rejoinTimer.reset(),this.joinPush.destroy(),new Promise((s=>{const r=new k(this,o.leave,{},e);r.receive("ok",(()=>{t(),s("ok")})).receive("timeout",(()=>{t(),s("timed out")})).receive("error",(()=>{s("error")})),r.send(),this._canPush()||r.trigger("ok",{})}))}async _fetchWithTimeout(e,t,s){const r=new AbortController,i=setTimeout((()=>r.abort()),s),n=await this.socket.fetch(e,Object.assign(Object.assign({},t),{signal:r.signal}));return clearTimeout(i),n}_push(e,t,s=this.timeout){if(!this.joinedOnce)throw`tried to push '${e}' to '${this.topic}' before joining. Use channel.subscribe() before pushing events`;let r=new k(this,e,t,s);return this._canPush()?r.send():(r.startTimeout(),this.pushBuffer.push(r)),r}_onMessage(e,t,s){return t}_isMember(e){return this.topic===e}_joinRef(){return this.joinPush.ref}_trigger(e,t,s){var r,i;const n=e.toLocaleLowerCase(),{close:a,error:c,leave:l,join:h}=o;if(s&&[a,c,l,h].indexOf(n)>=0&&s!==this._joinRef())return;let u=this._onMessage(n,t,s);if(t&&!u)throw"channel onMessage callbacks must return the payload, modified or unmodified";["insert","update","delete"].includes(n)?null===(r=this.bindings.postgres_changes)||void 0===r||r.filter((e=>{var t,s,r;return"*"===(null===(t=e.filter)||void 0===t?void 0:t.event)||(null===(r=null===(s=e.filter)||void 0===s?void 0:s.event)||void 0===r?void 0:r.toLocaleLowerCase())===n})).map((e=>e.callback(u,s))):null===(i=this.bindings[n])||void 0===i||i.filter((e=>{var s,r,i,o,a,c;if(["broadcast","presence","postgres_changes"].includes(n)){if("id"in e){const n=e.id,o=null===(s=e.filter)||void 0===s?void 0:s.event;return n&&(null===(r=t.ids)||void 0===r?void 0:r.includes(n))&&("*"===o||(null==o?void 0:o.toLocaleLowerCase())===(null===(i=t.data)||void 0===i?void 0:i.type.toLocaleLowerCase()))}{const s=null===(a=null===(o=null==e?void 0:e.filter)||void 0===o?void 0:o.event)||void 0===a?void 0:a.toLocaleLowerCase();return"*"===s||s===(null===(c=null==t?void 0:t.event)||void 0===c?void 0:c.toLocaleLowerCase())}}return e.type.toLocaleLowerCase()===n})).map((e=>{if("object"==typeof u&&"ids"in u){const e=u.data,{schema:t,table:s,commit_timestamp:r,type:i,errors:n}=e,o={schema:t,table:s,commit_timestamp:r,eventType:i,new:{},old:{},errors:n};u=Object.assign(Object.assign({},o),this._getPayloadRecords(e))}e.callback(u,s)}))}_isClosed(){return this.state===n.closed}_isJoined(){return this.state===n.joined}_isJoining(){return this.state===n.joining}_isLeaving(){return this.state===n.leaving}_replyEventName(e){return`chan_reply_${e}`}_on(e,t,s){const r=e.toLocaleLowerCase(),i={type:r,filter:t,callback:s};return this.bindings[r]?this.bindings[r].push(i):this.bindings[r]=[i],this}_off(e,t){const s=e.toLocaleLowerCase();return this.bindings[s]=this.bindings[s].filter((e=>{var r;return!((null===(r=e.type)||void 0===r?void 0:r.toLocaleLowerCase())===s&&A.isEqual(e.filter,t))})),this}static isEqual(e,t){if(Object.keys(e).length!==Object.keys(t).length)return!1;for(const s in e)if(e[s]!==t[s])return!1;return!0}_rejoinUntilConnected(){this.rejoinTimer.scheduleTimeout(),this.socket.isConnected()&&this._rejoin()}_onClose(e){this._on(o.close,{},e)}_onError(e){this._on(o.error,{},(t=>e(t)))}_canPush(){return this.socket.isConnected()&&this._isJoined()}_rejoin(e=this.timeout){this._isLeaving()||(this.socket._leaveOpenTopic(this.topic),this.state=n.joining,this.joinPush.resend(e))}_getPayloadRecords(e){const t={new:{},old:{}};return"INSERT"!==e.type&&"UPDATE"!==e.type||(t.new=d(e.columns,e.record)),"UPDATE"!==e.type&&"DELETE"!==e.type||(t.old=d(e.columns,e.old_record)),t}}const $=()=>{},x="undefined"!=typeof WebSocket;class C{constructor(e,t){var i;this.accessToken=null,this.apiKey=null,this.channels=[],this.endPoint="",this.httpEndpoint="",this.headers=r,this.params={},this.timeout=1e4,this.heartbeatIntervalMs=3e4,this.heartbeatTimer=void 0,this.pendingHeartbeatRef=null,this.ref=0,this.logger=$,this.conn=null,this.sendBuffer=[],this.serializer=new h,this.stateChangeCallbacks={open:[],close:[],error:[],message:[]},this._resolveFetch=e=>{let t;return t=e||("undefined"==typeof fetch?(...e)=>Promise.resolve().then(s.bind(s,907)).then((({default:t})=>t(...e))):fetch),(...e)=>t(...e)},this.endPoint=`${e}/${a.websocket}`,this.httpEndpoint=w(e),(null==t?void 0:t.transport)?this.transport=t.transport:this.transport=null,(null==t?void 0:t.params)&&(this.params=t.params),(null==t?void 0:t.headers)&&(this.headers=Object.assign(Object.assign({},this.headers),t.headers)),(null==t?void 0:t.timeout)&&(this.timeout=t.timeout),(null==t?void 0:t.logger)&&(this.logger=t.logger),(null==t?void 0:t.heartbeatIntervalMs)&&(this.heartbeatIntervalMs=t.heartbeatIntervalMs);const n=null===(i=null==t?void 0:t.params)||void 0===i?void 0:i.apikey;n&&(this.accessToken=n,this.apiKey=n),this.reconnectAfterMs=(null==t?void 0:t.reconnectAfterMs)?t.reconnectAfterMs:e=>[1e3,2e3,5e3,1e4][e-1]||1e4,this.encode=(null==t?void 0:t.encode)?t.encode:(e,t)=>t(JSON.stringify(e)),this.decode=(null==t?void 0:t.decode)?t.decode:this.serializer.decode.bind(this.serializer),this.reconnectTimer=new u((async()=>{this.disconnect(),this.connect()}),this.reconnectAfterMs),this.fetch=this._resolveFetch(null==t?void 0:t.fetch)}connect(){if(!this.conn)if(this.transport)this.conn=new this.transport(this._endPointURL(),void 0,{headers:this.headers});else{if(x)return this.conn=new WebSocket(this._endPointURL()),void this.setupConnection();this.conn=new R(this._endPointURL(),void 0,{close:()=>{this.conn=null}}),s.e(591).then(s.t.bind(s,591,23)).then((({default:e})=>{this.conn=new e(this._endPointURL(),void 0,{headers:this.headers}),this.setupConnection()}))}}disconnect(e,t){this.conn&&(this.conn.onclose=function(){},e?this.conn.close(e,null!=t?t:""):this.conn.close(),this.conn=null,this.heartbeatTimer&&clearInterval(this.heartbeatTimer),this.reconnectTimer.reset())}getChannels(){return this.channels}async removeChannel(e){const t=await e.unsubscribe();return 0===this.channels.length&&this.disconnect(),t}async removeAllChannels(){const e=await Promise.all(this.channels.map((e=>e.unsubscribe())));return this.disconnect(),e}log(e,t,s){this.logger(e,t,s)}connectionState(){switch(this.conn&&this.conn.readyState){case i.connecting:return c.Connecting;case i.open:return c.Open;case i.closing:return c.Closing;default:return c.Closed}}isConnected(){return this.connectionState()===c.Open}channel(e,t={config:{}}){const s=new A(`realtime:${e}`,t,this);return this.channels.push(s),s}push(e){const{topic:t,event:s,payload:r,ref:i}=e,n=()=>{this.encode(e,(e=>{var t;null===(t=this.conn)||void 0===t||t.send(e)}))};this.log("push",`${t} ${s} (${i})`,r),this.isConnected()?n():this.sendBuffer.push(n)}setAuth(e){this.accessToken=e,this.channels.forEach((t=>{e&&t.updateJoinPayload({access_token:e}),t.joinedOnce&&t._isJoined()&&t._push(o.access_token,{access_token:e})}))}_makeRef(){let e=this.ref+1;return e===this.ref?this.ref=0:this.ref=e,this.ref.toString()}_leaveOpenTopic(e){let t=this.channels.find((t=>t.topic===e&&(t._isJoined()||t._isJoining())));t&&(this.log("transport",`leaving duplicate topic "${e}"`),t.unsubscribe())}_remove(e){this.channels=this.channels.filter((t=>t._joinRef()!==e._joinRef()))}setupConnection(){this.conn&&(this.conn.binaryType="arraybuffer",this.conn.onopen=()=>this._onConnOpen(),this.conn.onerror=e=>this._onConnError(e),this.conn.onmessage=e=>this._onConnMessage(e),this.conn.onclose=e=>this._onConnClose(e))}_endPointURL(){return this._appendParams(this.endPoint,Object.assign({},this.params,{vsn:"1.0.0"}))}_onConnMessage(e){this.decode(e.data,(e=>{let{topic:t,event:s,payload:r,ref:i}=e;(i&&i===this.pendingHeartbeatRef||s===(null==r?void 0:r.type))&&(this.pendingHeartbeatRef=null),this.log("receive",`${r.status||""} ${t} ${s} ${i&&"("+i+")"||""}`,r),this.channels.filter((e=>e._isMember(t))).forEach((e=>e._trigger(s,r,i))),this.stateChangeCallbacks.message.forEach((t=>t(e)))}))}_onConnOpen(){this.log("transport",`connected to ${this._endPointURL()}`),this._flushSendBuffer(),this.reconnectTimer.reset(),this.heartbeatTimer&&clearInterval(this.heartbeatTimer),this.heartbeatTimer=setInterval((()=>this._sendHeartbeat()),this.heartbeatIntervalMs),this.stateChangeCallbacks.open.forEach((e=>e()))}_onConnClose(e){this.log("transport","close",e),this._triggerChanError(),this.heartbeatTimer&&clearInterval(this.heartbeatTimer),this.reconnectTimer.scheduleTimeout(),this.stateChangeCallbacks.close.forEach((t=>t(e)))}_onConnError(e){this.log("transport",e.message),this._triggerChanError(),this.stateChangeCallbacks.error.forEach((t=>t(e)))}_triggerChanError(){this.channels.forEach((e=>e._trigger(o.error)))}_appendParams(e,t){if(0===Object.keys(t).length)return e;const s=e.match(/\?/)?"&":"?";return`${e}${s}${new URLSearchParams(t)}`}_flushSendBuffer(){this.isConnected()&&this.sendBuffer.length>0&&(this.sendBuffer.forEach((e=>e())),this.sendBuffer=[])}_sendHeartbeat(){var e;if(this.isConnected()){if(this.pendingHeartbeatRef)return this.pendingHeartbeatRef=null,this.log("transport","heartbeat timeout. Attempting to re-establish connection"),void(null===(e=this.conn)||void 0===e||e.close(1e3,"hearbeat timeout"));this.pendingHeartbeatRef=this._makeRef(),this.push({topic:"phoenix",event:"heartbeat",payload:{},ref:this.pendingHeartbeatRef}),this.setAuth(this.accessToken)}}}class R{constructor(e,t,s){this.binaryType="arraybuffer",this.onclose=()=>{},this.onerror=()=>{},this.onmessage=()=>{},this.onopen=()=>{},this.readyState=i.connecting,this.send=()=>{},this.url=null,this.url=e,this.close=s.close}}},623:(e,t,s)=>{s.r(t),s.d(t,{StorageApiError:()=>n,StorageClient:()=>S,StorageError:()=>r,StorageUnknownError:()=>o,isStorageError:()=>i});class r extends Error{constructor(e){super(e),this.__isStorageError=!0,this.name="StorageError"}}function i(e){return"object"==typeof e&&null!==e&&"__isStorageError"in e}class n extends r{constructor(e,t){super(e),this.name="StorageApiError",this.status=t}toJSON(){return{name:this.name,message:this.message,status:this.status}}}class o extends r{constructor(e,t){super(e),this.name="StorageUnknownError",this.originalError=t}}const a=e=>{let t;return t=e||("undefined"==typeof fetch?(...e)=>Promise.resolve().then(s.bind(s,907)).then((({default:t})=>t(...e))):fetch),(...e)=>t(...e)},c=e=>{if(Array.isArray(e))return e.map((e=>c(e)));if("function"==typeof e||e!==Object(e))return e;const t={};return Object.entries(e).forEach((([e,s])=>{const r=e.replace(/([-_][a-z])/gi,(e=>e.toUpperCase().replace(/[-_]/g,"")));t[r]=c(s)})),t};var l=function(e,t,s,r){return new(s||(s=Promise))((function(i,n){function o(e){try{c(r.next(e))}catch(e){n(e)}}function a(e){try{c(r.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof s?t:new s((function(e){e(t)}))).then(o,a)}c((r=r.apply(e,t||[])).next())}))};const h=e=>e.msg||e.message||e.error_description||e.error||JSON.stringify(e),u=(e,t,r)=>l(void 0,void 0,void 0,(function*(){const i=yield(a=void 0,c=void 0,l=void 0,u=function*(){return"undefined"==typeof Response?(yield Promise.resolve().then(s.bind(s,907))).Response:Response},new(l||(l=Promise))((function(e,t){function s(e){try{i(u.next(e))}catch(e){t(e)}}function r(e){try{i(u.throw(e))}catch(e){t(e)}}function i(t){var i;t.done?e(t.value):(i=t.value,i instanceof l?i:new l((function(e){e(i)}))).then(s,r)}i((u=u.apply(a,c||[])).next())})));var a,c,l,u;e instanceof i&&!(null==r?void 0:r.noResolveJson)?e.json().then((s=>{t(new n(h(s),e.status||500))})).catch((e=>{t(new o(h(e),e))})):t(new o(h(e),e))})),d=(e,t,s,r)=>{const i={method:e,headers:(null==t?void 0:t.headers)||{}};return"GET"===e?i:(i.headers=Object.assign({"Content-Type":"application/json"},null==t?void 0:t.headers),r&&(i.body=JSON.stringify(r)),Object.assign(Object.assign({},i),s))};function f(e,t,s,r,i,n){return l(this,void 0,void 0,(function*(){return new Promise(((o,a)=>{e(s,d(t,r,i,n)).then((e=>{if(!e.ok)throw e;return(null==r?void 0:r.noResolveJson)?e:e.json()})).then((e=>o(e))).catch((e=>u(e,a,r)))}))}))}function p(e,t,s,r){return l(this,void 0,void 0,(function*(){return f(e,"GET",t,s,r)}))}function g(e,t,s,r,i){return l(this,void 0,void 0,(function*(){return f(e,"POST",t,r,i,s)}))}function y(e,t,s,r,i){return l(this,void 0,void 0,(function*(){return f(e,"DELETE",t,r,i,s)}))}var v=function(e,t,s,r){return new(s||(s=Promise))((function(i,n){function o(e){try{c(r.next(e))}catch(e){n(e)}}function a(e){try{c(r.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof s?t:new s((function(e){e(t)}))).then(o,a)}c((r=r.apply(e,t||[])).next())}))};const m={limit:100,offset:0,sortBy:{column:"name",order:"asc"}},_={cacheControl:"3600",contentType:"text/plain;charset=UTF-8",upsert:!1};class b{constructor(e,t={},s,r){this.url=e,this.headers=t,this.bucketId=s,this.fetch=a(r)}uploadOrUpdate(e,t,s,r){return v(this,void 0,void 0,(function*(){try{let i;const n=Object.assign(Object.assign({},_),r);let o=Object.assign(Object.assign({},this.headers),"POST"===e&&{"x-upsert":String(n.upsert)});const a=n.metadata;"undefined"!=typeof Blob&&s instanceof Blob?(i=new FormData,i.append("cacheControl",n.cacheControl),i.append("",s),a&&i.append("metadata",this.encodeMetadata(a))):"undefined"!=typeof FormData&&s instanceof FormData?(i=s,i.append("cacheControl",n.cacheControl),a&&i.append("metadata",this.encodeMetadata(a))):(i=s,o["cache-control"]=`max-age=${n.cacheControl}`,o["content-type"]=n.contentType,a&&(o["x-metadata"]=this.toBase64(this.encodeMetadata(a)))),(null==r?void 0:r.headers)&&(o=Object.assign(Object.assign({},o),r.headers));const c=this._removeEmptyFolders(t),l=this._getFinalPath(c),h=yield this.fetch(`${this.url}/object/${l}`,Object.assign({method:e,body:i,headers:o},(null==n?void 0:n.duplex)?{duplex:n.duplex}:{})),u=yield h.json();return h.ok?{data:{path:c,id:u.Id,fullPath:u.Key},error:null}:{data:null,error:u}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}upload(e,t,s){return v(this,void 0,void 0,(function*(){return this.uploadOrUpdate("POST",e,t,s)}))}uploadToSignedUrl(e,t,s,r){return v(this,void 0,void 0,(function*(){const n=this._removeEmptyFolders(e),o=this._getFinalPath(n),a=new URL(this.url+`/object/upload/sign/${o}`);a.searchParams.set("token",t);try{let e;const t=Object.assign({upsert:_.upsert},r),i=Object.assign(Object.assign({},this.headers),{"x-upsert":String(t.upsert)});"undefined"!=typeof Blob&&s instanceof Blob?(e=new FormData,e.append("cacheControl",t.cacheControl),e.append("",s)):"undefined"!=typeof FormData&&s instanceof FormData?(e=s,e.append("cacheControl",t.cacheControl)):(e=s,i["cache-control"]=`max-age=${t.cacheControl}`,i["content-type"]=t.contentType);const o=yield this.fetch(a.toString(),{method:"PUT",body:e,headers:i}),c=yield o.json();return o.ok?{data:{path:n,fullPath:c.Key},error:null}:{data:null,error:c}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}createSignedUploadUrl(e,t){return v(this,void 0,void 0,(function*(){try{let s=this._getFinalPath(e);const i=Object.assign({},this.headers);(null==t?void 0:t.upsert)&&(i["x-upsert"]="true");const n=yield g(this.fetch,`${this.url}/object/upload/sign/${s}`,{},{headers:i}),o=new URL(this.url+n.url),a=o.searchParams.get("token");if(!a)throw new r("No token returned by API");return{data:{signedUrl:o.toString(),path:e,token:a},error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}update(e,t,s){return v(this,void 0,void 0,(function*(){return this.uploadOrUpdate("PUT",e,t,s)}))}move(e,t,s){return v(this,void 0,void 0,(function*(){try{return{data:yield g(this.fetch,`${this.url}/object/move`,{bucketId:this.bucketId,sourceKey:e,destinationKey:t,destinationBucket:null==s?void 0:s.destinationBucket},{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}copy(e,t,s){return v(this,void 0,void 0,(function*(){try{return{data:{path:(yield g(this.fetch,`${this.url}/object/copy`,{bucketId:this.bucketId,sourceKey:e,destinationKey:t,destinationBucket:null==s?void 0:s.destinationBucket},{headers:this.headers})).Key},error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}createSignedUrl(e,t,s){return v(this,void 0,void 0,(function*(){try{let r=this._getFinalPath(e),i=yield g(this.fetch,`${this.url}/object/sign/${r}`,Object.assign({expiresIn:t},(null==s?void 0:s.transform)?{transform:s.transform}:{}),{headers:this.headers});const n=(null==s?void 0:s.download)?`&download=${!0===s.download?"":s.download}`:"";return i={signedUrl:encodeURI(`${this.url}${i.signedURL}${n}`)},{data:i,error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}createSignedUrls(e,t,s){return v(this,void 0,void 0,(function*(){try{const r=yield g(this.fetch,`${this.url}/object/sign/${this.bucketId}`,{expiresIn:t,paths:e},{headers:this.headers}),i=(null==s?void 0:s.download)?`&download=${!0===s.download?"":s.download}`:"";return{data:r.map((e=>Object.assign(Object.assign({},e),{signedUrl:e.signedURL?encodeURI(`${this.url}${e.signedURL}${i}`):null}))),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}download(e,t){return v(this,void 0,void 0,(function*(){const s=void 0!==(null==t?void 0:t.transform)?"render/image/authenticated":"object",r=this.transformOptsToQueryString((null==t?void 0:t.transform)||{}),n=r?`?${r}`:"";try{const t=this._getFinalPath(e),r=yield p(this.fetch,`${this.url}/${s}/${t}${n}`,{headers:this.headers,noResolveJson:!0});return{data:yield r.blob(),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}info(e){return v(this,void 0,void 0,(function*(){const t=this._getFinalPath(e);try{const e=yield p(this.fetch,`${this.url}/object/info/${t}`,{headers:this.headers});return{data:c(e),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}exists(e){return v(this,void 0,void 0,(function*(){const t=this._getFinalPath(e);try{return yield function(e,t,s){return l(this,void 0,void 0,(function*(){return f(e,"HEAD",t,Object.assign(Object.assign({},s),{noResolveJson:!0}),undefined)}))}(this.fetch,`${this.url}/object/${t}`,{headers:this.headers}),{data:!0,error:null}}catch(e){if(i(e)&&e instanceof o){const t=e.originalError;if([400,404].includes(null==t?void 0:t.status))return{data:!1,error:e}}throw e}}))}getPublicUrl(e,t){const s=this._getFinalPath(e),r=[],i=(null==t?void 0:t.download)?`download=${!0===t.download?"":t.download}`:"";""!==i&&r.push(i);const n=void 0!==(null==t?void 0:t.transform)?"render/image":"object",o=this.transformOptsToQueryString((null==t?void 0:t.transform)||{});""!==o&&r.push(o);let a=r.join("&");return""!==a&&(a=`?${a}`),{data:{publicUrl:encodeURI(`${this.url}/${n}/public/${s}${a}`)}}}remove(e){return v(this,void 0,void 0,(function*(){try{return{data:yield y(this.fetch,`${this.url}/object/${this.bucketId}`,{prefixes:e},{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}list(e,t,s){return v(this,void 0,void 0,(function*(){try{const r=Object.assign(Object.assign(Object.assign({},m),t),{prefix:e||""});return{data:yield g(this.fetch,`${this.url}/object/list/${this.bucketId}`,r,{headers:this.headers},s),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}encodeMetadata(e){return JSON.stringify(e)}toBase64(e){return"undefined"!=typeof Buffer?Buffer.from(e).toString("base64"):btoa(e)}_getFinalPath(e){return`${this.bucketId}/${e}`}_removeEmptyFolders(e){return e.replace(/^\/|\/$/g,"").replace(/\/+/g,"/")}transformOptsToQueryString(e){const t=[];return e.width&&t.push(`width=${e.width}`),e.height&&t.push(`height=${e.height}`),e.resize&&t.push(`resize=${e.resize}`),e.format&&t.push(`format=${e.format}`),e.quality&&t.push(`quality=${e.quality}`),t.join("&")}}const w={"X-Client-Info":"storage-js/2.7.0"};var k=function(e,t,s,r){return new(s||(s=Promise))((function(i,n){function o(e){try{c(r.next(e))}catch(e){n(e)}}function a(e){try{c(r.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof s?t:new s((function(e){e(t)}))).then(o,a)}c((r=r.apply(e,t||[])).next())}))};class T{constructor(e,t={},s){this.url=e,this.headers=Object.assign(Object.assign({},w),t),this.fetch=a(s)}listBuckets(){return k(this,void 0,void 0,(function*(){try{return{data:yield p(this.fetch,`${this.url}/bucket`,{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}getBucket(e){return k(this,void 0,void 0,(function*(){try{return{data:yield p(this.fetch,`${this.url}/bucket/${e}`,{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}createBucket(e,t={public:!1}){return k(this,void 0,void 0,(function*(){try{return{data:yield g(this.fetch,`${this.url}/bucket`,{id:e,name:e,public:t.public,file_size_limit:t.fileSizeLimit,allowed_mime_types:t.allowedMimeTypes},{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}updateBucket(e,t){return k(this,void 0,void 0,(function*(){try{const s=yield function(e,t,s,r){return l(this,void 0,void 0,(function*(){return f(e,"PUT",t,r,undefined,s)}))}(this.fetch,`${this.url}/bucket/${e}`,{id:e,name:e,public:t.public,file_size_limit:t.fileSizeLimit,allowed_mime_types:t.allowedMimeTypes},{headers:this.headers});return{data:s,error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}emptyBucket(e){return k(this,void 0,void 0,(function*(){try{return{data:yield g(this.fetch,`${this.url}/bucket/${e}/empty`,{},{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}deleteBucket(e){return k(this,void 0,void 0,(function*(){try{return{data:yield y(this.fetch,`${this.url}/bucket/${e}`,{},{headers:this.headers}),error:null}}catch(e){if(i(e))return{data:null,error:e};throw e}}))}}class S extends T{constructor(e,t={},s){super(e,t,s)}from(e){return new b(this.url,this.headers,e,this.fetch)}}},787:function(e,t,s){var r=this&&this.__awaiter||function(e,t,s,r){return new(s||(s=Promise))((function(i,n){function o(e){try{c(r.next(e))}catch(e){n(e)}}function a(e){try{c(r.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof s?t:new s((function(e){e(t)}))).then(o,a)}c((r=r.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0});const i=s(227),n=s(279),o=s(932),a=s(623),c=s(985),l=s(720),h=s(793),u=s(689);t.default=class{constructor(e,t,s){var r,i,o;if(this.supabaseUrl=e,this.supabaseKey=t,!e)throw new Error("supabaseUrl is required.");if(!t)throw new Error("supabaseKey is required.");const a=(0,h.stripTrailingSlash)(e);this.realtimeUrl=`${a}/realtime/v1`.replace(/^http/i,"ws"),this.authUrl=`${a}/auth/v1`,this.storageUrl=`${a}/storage/v1`,this.functionsUrl=`${a}/functions/v1`;const u=`sb-${new URL(this.authUrl).hostname.split(".")[0]}-auth-token`,d={db:c.DEFAULT_DB_OPTIONS,realtime:c.DEFAULT_REALTIME_OPTIONS,auth:Object.assign(Object.assign({},c.DEFAULT_AUTH_OPTIONS),{storageKey:u}),global:c.DEFAULT_GLOBAL_OPTIONS},f=(0,h.applySettingDefaults)(null!=s?s:{},d);this.storageKey=null!==(r=f.auth.storageKey)&&void 0!==r?r:"",this.headers=null!==(i=f.global.headers)&&void 0!==i?i:{},f.accessToken?(this.accessToken=f.accessToken,this.auth=new Proxy({},{get:(e,t)=>{throw new Error(`@supabase/supabase-js: Supabase Client is configured with the accessToken option, accessing supabase.auth.${String(t)} is not possible`)}})):this.auth=this._initSupabaseAuthClient(null!==(o=f.auth)&&void 0!==o?o:{},this.headers,f.global.fetch),this.fetch=(0,l.fetchWithAuth)(t,this._getAccessToken.bind(this),f.global.fetch),this.realtime=this._initRealtimeClient(Object.assign({headers:this.headers},f.realtime)),this.rest=new n.PostgrestClient(`${a}/rest/v1`,{headers:this.headers,schema:f.db.schema,fetch:this.fetch}),f.accessToken||this._listenForAuthEvents()}get functions(){return new i.FunctionsClient(this.functionsUrl,{headers:this.headers,customFetch:this.fetch})}get storage(){return new a.StorageClient(this.storageUrl,this.headers,this.fetch)}from(e){return this.rest.from(e)}schema(e){return this.rest.schema(e)}rpc(e,t={},s={}){return this.rest.rpc(e,t,s)}channel(e,t={config:{}}){return this.realtime.channel(e,t)}getChannels(){return this.realtime.getChannels()}removeChannel(e){return this.realtime.removeChannel(e)}removeAllChannels(){return this.realtime.removeAllChannels()}_getAccessToken(){var e,t;return r(this,void 0,void 0,(function*(){if(this.accessToken)return yield this.accessToken();const{data:s}=yield this.auth.getSession();return null!==(t=null===(e=s.session)||void 0===e?void 0:e.access_token)&&void 0!==t?t:null}))}_initSupabaseAuthClient({autoRefreshToken:e,persistSession:t,detectSessionInUrl:s,storage:r,storageKey:i,flowType:n,lock:o,debug:a},c,l){var h;const d={Authorization:`Bearer ${this.supabaseKey}`,apikey:`${this.supabaseKey}`};return new u.SupabaseAuthClient({url:this.authUrl,headers:Object.assign(Object.assign({},d),c),storageKey:i,autoRefreshToken:e,persistSession:t,detectSessionInUrl:s,storage:r,flowType:n,lock:o,debug:a,fetch:l,hasCustomAuthorizationHeader:null!==(h="Authorization"in this.headers)&&void 0!==h&&h})}_initRealtimeClient(e){return new o.RealtimeClient(this.realtimeUrl,Object.assign(Object.assign({},e),{params:Object.assign({apikey:this.supabaseKey},null==e?void 0:e.params)}))}_listenForAuthEvents(){return this.auth.onAuthStateChange(((e,t)=>{this._handleTokenChanged(e,"CLIENT",null==t?void 0:t.access_token)}))}_handleTokenChanged(e,t,s){"TOKEN_REFRESHED"!==e&&"SIGNED_IN"!==e||this.changedAccessToken===s?"SIGNED_OUT"===e&&(this.realtime.setAuth(this.supabaseKey),"STORAGE"==t&&this.auth.signOut(),this.changedAccessToken=void 0):(this.realtime.setAuth(null!=s?s:null),this.changedAccessToken=s)}}},440:function(e,t,s){var r=this&&this.__createBinding||(Object.create?function(e,t,s,r){void 0===r&&(r=s);var i=Object.getOwnPropertyDescriptor(t,s);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[s]}}),Object.defineProperty(e,r,i)}:function(e,t,s,r){void 0===r&&(r=s),e[r]=t[s]}),i=this&&this.__exportStar||function(e,t){for(var s in e)"default"===s||Object.prototype.hasOwnProperty.call(t,s)||r(t,e,s)},n=this&&this.__importDefault||function(e){return e&&e.__esModule?e:{default:e}};Object.defineProperty(t,"__esModule",{value:!0}),t.createClient=t.SupabaseClient=t.FunctionRegion=t.FunctionsError=t.FunctionsRelayError=t.FunctionsFetchError=t.FunctionsHttpError=void 0;const o=n(s(787));i(s(235),t);var a=s(227);Object.defineProperty(t,"FunctionsHttpError",{enumerable:!0,get:function(){return a.FunctionsHttpError}}),Object.defineProperty(t,"FunctionsFetchError",{enumerable:!0,get:function(){return a.FunctionsFetchError}}),Object.defineProperty(t,"FunctionsRelayError",{enumerable:!0,get:function(){return a.FunctionsRelayError}}),Object.defineProperty(t,"FunctionsError",{enumerable:!0,get:function(){return a.FunctionsError}}),Object.defineProperty(t,"FunctionRegion",{enumerable:!0,get:function(){return a.FunctionRegion}}),i(s(932),t);var c=s(787);Object.defineProperty(t,"SupabaseClient",{enumerable:!0,get:function(){return n(c).default}}),t.createClient=(e,t,s)=>new o.default(e,t,s)},689:(e,t,s)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.SupabaseAuthClient=void 0;const r=s(235);class i extends r.AuthClient{constructor(e){super(e)}}t.SupabaseAuthClient=i},985:(e,t,s)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.DEFAULT_REALTIME_OPTIONS=t.DEFAULT_AUTH_OPTIONS=t.DEFAULT_DB_OPTIONS=t.DEFAULT_GLOBAL_OPTIONS=t.DEFAULT_HEADERS=void 0;const r=s(560);let i="";i="undefined"!=typeof Deno?"deno":"undefined"!=typeof document?"web":"undefined"!=typeof navigator&&"ReactNative"===navigator.product?"react-native":"node",t.DEFAULT_HEADERS={"X-Client-Info":`supabase-js-${i}/${r.version}`},t.DEFAULT_GLOBAL_OPTIONS={headers:t.DEFAULT_HEADERS},t.DEFAULT_DB_OPTIONS={schema:"public"},t.DEFAULT_AUTH_OPTIONS={autoRefreshToken:!0,persistSession:!0,detectSessionInUrl:!0,flowType:"implicit"},t.DEFAULT_REALTIME_OPTIONS={}},720:function(e,t,s){var r=this&&this.__createBinding||(Object.create?function(e,t,s,r){void 0===r&&(r=s);var i=Object.getOwnPropertyDescriptor(t,s);i&&!("get"in i?!t.__esModule:i.writable||i.configurable)||(i={enumerable:!0,get:function(){return t[s]}}),Object.defineProperty(e,r,i)}:function(e,t,s,r){void 0===r&&(r=s),e[r]=t[s]}),i=this&&this.__setModuleDefault||(Object.create?function(e,t){Object.defineProperty(e,"default",{enumerable:!0,value:t})}:function(e,t){e.default=t}),n=this&&this.__importStar||function(e){if(e&&e.__esModule)return e;var t={};if(null!=e)for(var s in e)"default"!==s&&Object.prototype.hasOwnProperty.call(e,s)&&r(t,e,s);return i(t,e),t},o=this&&this.__awaiter||function(e,t,s,r){return new(s||(s=Promise))((function(i,n){function o(e){try{c(r.next(e))}catch(e){n(e)}}function a(e){try{c(r.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof s?t:new s((function(e){e(t)}))).then(o,a)}c((r=r.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0}),t.fetchWithAuth=t.resolveHeadersConstructor=t.resolveFetch=void 0;const a=n(s(907));t.resolveFetch=e=>{let t;return t=e||("undefined"==typeof fetch?a.default:fetch),(...e)=>t(...e)},t.resolveHeadersConstructor=()=>"undefined"==typeof Headers?a.Headers:Headers,t.fetchWithAuth=(e,s,r)=>{const i=(0,t.resolveFetch)(r),n=(0,t.resolveHeadersConstructor)();return(t,r)=>o(void 0,void 0,void 0,(function*(){var o;const a=null!==(o=yield s())&&void 0!==o?o:e;let c=new n(null==r?void 0:r.headers);return c.has("apikey")||c.set("apikey",e),c.has("Authorization")||c.set("Authorization",`Bearer ${a}`),i(t,Object.assign(Object.assign({},r),{headers:c}))}))}},793:function(e,t){var s=this&&this.__awaiter||function(e,t,s,r){return new(s||(s=Promise))((function(i,n){function o(e){try{c(r.next(e))}catch(e){n(e)}}function a(e){try{c(r.throw(e))}catch(e){n(e)}}function c(e){var t;e.done?i(e.value):(t=e.value,t instanceof s?t:new s((function(e){e(t)}))).then(o,a)}c((r=r.apply(e,t||[])).next())}))};Object.defineProperty(t,"__esModule",{value:!0}),t.applySettingDefaults=t.isBrowser=t.stripTrailingSlash=t.uuid=void 0,t.uuid=function(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,(function(e){var t=16*Math.random()|0;return("x"==e?t:3&t|8).toString(16)}))},t.stripTrailingSlash=function(e){return e.replace(/\/$/,"")},t.isBrowser=()=>"undefined"!=typeof window,t.applySettingDefaults=function(e,t){const{db:r,auth:i,realtime:n,global:o}=e,{db:a,auth:c,realtime:l,global:h}=t,u={db:Object.assign(Object.assign({},a),r),auth:Object.assign(Object.assign({},c),i),realtime:Object.assign(Object.assign({},l),n),global:Object.assign(Object.assign({},h),o),accessToken:()=>s(this,void 0,void 0,(function*(){return""}))};return e.accessToken?u.accessToken=e.accessToken:delete u.accessToken,u}},560:(e,t)=>{Object.defineProperty(t,"__esModule",{value:!0}),t.version=void 0,t.version="2.45.4"}},n={};function o(e){var t=n[e];if(void 0!==t)return t.exports;var s=n[e]={exports:{}};return i[e].call(s.exports,s,s.exports,o),s.exports}return o.m=i,t=Object.getPrototypeOf?e=>Object.getPrototypeOf(e):e=>e.__proto__,o.t=function(s,r){if(1&r&&(s=this(s)),8&r)return s;if("object"==typeof s&&s){if(4&r&&s.__esModule)return s;if(16&r&&"function"==typeof s.then)return s}var i=Object.create(null);o.r(i);var n={};e=e||[null,t({}),t([]),t(t)];for(var a=2&r&&s;"object"==typeof a&&!~e.indexOf(a);a=t(a))Object.getOwnPropertyNames(a).forEach((e=>n[e]=()=>s[e]));return n.default=()=>s,o.d(i,n),i},o.d=(e,t)=>{for(var s in t)o.o(t,s)&&!o.o(e,s)&&Object.defineProperty(e,s,{enumerable:!0,get:t[s]})},o.f={},o.e=e=>Promise.all(Object.keys(o.f).reduce(((t,s)=>(o.f[s](e,t),t)),[])),o.u=e=>e+".supabase.js",o.g=function(){if("object"==typeof globalThis)return globalThis;try{return this||new Function("return this")()}catch(e){if("object"==typeof window)return window}}(),o.o=(e,t)=>Object.prototype.hasOwnProperty.call(e,t),s={},r="supabase:",o.l=(e,t,i,n)=>{if(s[e])s[e].push(t);else{var a,c;if(void 0!==i)for(var l=document.getElementsByTagName("script"),h=0;h<l.length;h++){var u=l[h];if(u.getAttribute("src")==e||u.getAttribute("data-webpack")==r+i){a=u;break}}a||(c=!0,(a=document.createElement("script")).charset="utf-8",a.timeout=120,o.nc&&a.setAttribute("nonce",o.nc),a.setAttribute("data-webpack",r+i),a.src=e),s[e]=[t];var d=(t,r)=>{a.onerror=a.onload=null,clearTimeout(f);var i=s[e];if(delete s[e],a.parentNode&&a.parentNode.removeChild(a),i&&i.forEach((e=>e(r))),t)return t(r)},f=setTimeout(d.bind(null,void 0,{type:"timeout",target:a}),12e4);a.onerror=d.bind(null,a.onerror),a.onload=d.bind(null,a.onload),c&&document.head.appendChild(a)}},o.r=e=>{"undefined"!=typeof Symbol&&Symbol.toStringTag&&Object.defineProperty(e,Symbol.toStringTag,{value:"Module"}),Object.defineProperty(e,"__esModule",{value:!0})},(()=>{var e;o.g.importScripts&&(e=o.g.location+"");var t=o.g.document;if(!e&&t&&(t.currentScript&&"SCRIPT"===t.currentScript.tagName.toUpperCase()&&(e=t.currentScript.src),!e)){var s=t.getElementsByTagName("script");if(s.length)for(var r=s.length-1;r>-1&&(!e||!/^http(s?):/.test(e));)e=s[r--].src}if(!e)e=location.href;e=e.replace(/#.*$/,"").replace(/\?.*$/,"").replace(/\/[^\/]+$/,"/"),o.p=e})(),(()=>{var e={792:0};o.f.j=(t,s)=>{var r=o.o(e,t)?e[t]:void 0;if(0!==r)if(r)s.push(r[2]);else{var i=new Promise(((s,i)=>r=e[t]=[s,i]));s.push(r[2]=i);var n=o.p+o.u(t),a=new Error;o.l(n,(s=>{if(o.o(e,t)&&(0!==(r=e[t])&&(e[t]=void 0),r)){var i=s&&("load"===s.type?"missing":s.type),n=s&&s.target&&s.target.src;a.message="Loading chunk "+t+" failed.\n("+i+": "+n+")",a.name="ChunkLoadError",a.type=i,a.request=n,r[1](a)}}),"chunk-"+t,t)}};var t=(t,s)=>{var r,i,[n,a,c]=s,l=0;if(n.some((t=>0!==e[t]))){for(r in a)o.o(a,r)&&(o.m[r]=a[r]);c&&c(o)}for(t&&t(s);l<n.length;l++)i=n[l],o.o(e,i)&&e[i]&&e[i][0](),e[i]=0},s=self.webpackChunksupabase=self.webpackChunksupabase||[];s.forEach(t.bind(null,0)),s.push=t.bind(null,s.push.bind(s))})(),o(440)})()));
+</script>
+<script>
+const RAW = `0|童子切安綱 剥落|どうじぎりやすつな はくらく|太刀|—|中村悠一|沙汰|2025-08-12
+3|三日月宗近|みかづきむねちか|太刀|三条|鳥海浩輔|沙汰|2015-01-14
+5|小狐丸|こぎつねまる|太刀|三条|近藤隆|沙汰|2015-01-23
+7|石切丸|いしきりまる|大太刀|三条|高橋英則|細越裕治|2015-01-14
+9|岩融|いわとおし|薙刀|三条|宮下栄治|キナコ|2015-01-14
+11|今剣|いまのつるぎ|短刀|三条|山下大輝|しきみ|2015-01-14
+13|大典太光世|おおでんたみつよ|太刀|三池|浪川大輔|三輪士郎|2016-08-16
+15|ソハヤノツルキ|そはやのつるき|太刀|三池|浅利遼太|三輪士郎|2016-08-16
+17|数珠丸恒次|じゅずまるつねつぐ|太刀|青江|緑川光|ホノジロトヲジ|2016-03-18
+19|にっかり青江|にっかりあおえ|脇差|青江|間島淳司|べっこ|2015-02-14
+21|鬼丸国綱|おにまるくにつな|太刀|粟田口|森川智之|Niθ|2020-03-01
+23|鳴狐|なきぎつね|打刀|粟田口|浅沼晋太郎|汲田|2015-01-14
+25|一期一振|いちごひとふり|太刀|粟田口|田丸篤志|シキユリ|2015-01-14
+27|鯰尾藤四郎|なまずおとうしろう|脇差|粟田口|斉藤壮馬|てく|2015-01-14
+29|骨喰藤四郎|ほねばみとうしろう|脇差|粟田口|鈴木裕斗|てく|2015-01-14
+31|平野藤四郎|ひらのとうしろう|短刀|粟田口|浅利遼太|問七|2015-01-14
+33|厚藤四郎|あつとうしろう|短刀|粟田口|山下大輝|汲田|2015-01-14
+35|後藤藤四郎|ごとうとうしろう|短刀|粟田口|村田太志|しきみ|2015-11-19
+37|信濃藤四郎|しなのとうしろう|短刀|粟田口|小林裕介|くにみつ|2016-04-12
+39|前田藤四郎|まえだとうしろう|短刀|粟田口|入江玲於奈|問七|2015-01-14
+41|秋田藤四郎|あきたとうしろう|短刀|粟田口|山谷祥生|タカオカ|2015-01-14
+43|博多藤四郎|はかたとうしろう|短刀|粟田口|大須賀純|問七|2015-06-11
+45|乱藤四郎|みだれとうしろう|短刀|粟田口|山本和臣|小津|2015-01-14
+47|五虎退|ごこたい|短刀|粟田口|粕谷雄太|ホノジロトヲジ|2015-01-14
+49|薬研藤四郎|やげんとうしろう|短刀|粟田口|山下誠一郎|石商|2015-01-14
+51|包丁藤四郎|ほうちょうとうしろう|短刀|粟田口|宮田幸季|汲田|2016-10-18
+53|大包平|おおかねひら|太刀|古備前|小野友樹|小宮国春|2016-12-20
+55|鶯丸|うぐいすまる|太刀|古備前|柿原徹也|シラノ|2015-01-14
+57|明石国行|あかしくにゆき|太刀|来|浅利遼太|双葉はづき|2015-05-01
+59|蛍丸|ほたるまる|大太刀|来|井口祐一|彦|2015-01-14
+61|愛染国俊|あいぜんくにとし|短刀|来|山下誠一郎|迫ミサキ|2015-01-14
+63|千子村正|せんごむらまさ|打刀|村正|諏訪部順一|なまにくATK|2017-01-31
+65|蜻蛉切|とんぼきり|槍|村正|櫻井トオル|源覚|2015-01-14
+67|物吉貞宗|ものよしさだむね|脇差|貞宗|小野賢章|Izumi|2015-10-29
+69|太鼓鐘貞宗|たいこがねさだむね|短刀|貞宗|髙橋孝治|⑪|2016-06-23
+71|亀甲貞宗|きっこうさだむね|打刀|貞宗|山中真尋|ホームラン・拳|2016-08-23
+73|燭台切光忠|しょくだいきりみつただ|太刀|長船|佐藤拓也|藤未都也|2015-01-14
+75|大般若長光|だいはんにゃながみつ|太刀|長船|三木眞一郎|浅島ヨシユキ|2017-10-18
+77|小竜景光|こりゅうかげみつ|太刀|長船|立花慎之介|浅島ヨシユキ|2017-08-08
+79|江雪左文字|こうせつさもんじ|太刀|左文字|佐藤拓也|鈴木次郎|2015-01-14
+81|宗三左文字|そうざさもんじ|打刀|左文字|泰勇気|鈴木次郎|2015-01-14
+83|小夜左文字|さよさもんじ|短刀|左文字|村瀬歩|鈴木次郎|2015-01-14
+85|加州清光|かしゅうきよみつ|打刀|—|増田俊樹|汲田|2015-01-14
+87|大和守安定|やまとのかみやすさだ|打刀|—|市来光弘|汲田|2015-01-14
+89|歌仙兼定|かせんかねさだ|打刀|兼定|石川界人|ホームラン・拳|2015-01-14
+91|和泉守兼定|いずみのかみかねさだ|打刀|兼定|木村良平|白峰|2015-01-14
+93|陸奥守吉行|むつのかみよしゆき|打刀|—|濱健人|煮たか|2015-01-14
+95|山姥切国広|やまんばぎりくにひろ|打刀|堀川|前野智昭|⑪|2015-01-14
+97|山伏国広|やまぶしくにひろ|太刀|堀川|櫻井トオル|ミドロ|2015-01-14
+99|堀川国広|ほりかわくにひろ|脇差|堀川|榎木淳弥|白峰|2015-01-14
+101|蜂須賀虎徹|はちすかこてつ|打刀|虎徹|興津和幸|新井テル子|2015-01-14
+103|浦島虎徹|うらしまこてつ|脇差|虎徹|福島潤|新井テル子|2015-03-17
+105|長曽祢虎徹|ながそねこてつ|打刀|虎徹|新垣樽助|新井テル子|2015-03-17
+107|髭切|ひげきり|太刀|—|花江夏樹|シラノ|2015-12-29
+112|膝丸|ひざまる|太刀|—|岡本信彦|シラノ|2015-12-29
+116|大倶利伽羅|おおくりから|打刀|広光|古川慎|小宮国春|2015-01-14
+118|へし切長谷部|へしきりはせべ|打刀|—|新垣樽助|小宮国春|2015-01-14
+120|不動行光|ふどうゆきみつ|短刀|—|阪口大助|minato|2016-02-16
+122|獅子王|ししおう|太刀|—|逢坂良太|しばの番茶|2015-01-14
+124|小烏丸|こがらすまる|太刀|—|保科総一朗|ホノジロトヲジ|2016-11-18
+126|抜丸|ぬけまる|太刀|—|梶原岳人|ホノジロトヲジ|2022-08-29
+128|同田貫正国|どうだぬきまさくに|打刀|—|櫻井トオル|AKIRA|2015-01-14
+130|鶴丸国永|つるまるくになが|太刀|—|斉藤壮馬|Izumi|2015-01-14
+132|太郎太刀|たろうたち|大太刀|—|泰勇気|ウエハラ蜂|2015-01-14
+134|次郎太刀|じろうたち|大太刀|—|宮下栄治|トミダトモミ|2015-01-14
+136|日本号|にほんごう|槍|—|津田健次郎|鈴木次郎|2015-08-11
+138|御手杵|おてぎね|槍|—|浜田賢二|minato|2015-01-14
+140|巴形薙刀|ともえがたなぎなた|薙刀|—|野島裕史|キナコ|2017-07-04
+142|毛利藤四郎|もうりとうしろう|短刀|粟田口|高城元気|猫缶まっしぐら|2017-07-25
+144|篭手切江|こてぎりごう|脇差|江|広瀬裕也|煮たか|2017-08-15
+146|謙信景光|けんしんかげみつ|短刀|長船|代永翼|ホームラン・拳|2017-09-05
+148|小豆長光|あずきながみつ|太刀|長船|川原慶久|ホームラン・拳|2017-10-03
+150|日向正宗|ひゅうがまさむね|短刀|正宗|梶裕貴|枢やな|2017-12-19
+152|静形薙刀|しずかがたなぎなた|薙刀|—|阿座上洋平|キナコ|2018-04-17
+154|南泉一文字|なんせんいちもんじ|打刀|福岡一文字|河西健吾|三杜シノヴ|2018-04-24
+156|千代金丸|ちよがねまる|太刀|—|新垣樽助|なまにくATK|2018-06-28
+158|山姥切長義|やまんばぎりちょうぎ|打刀|—|高梨謙吾|⑪|2018-10-31
+160|豊前江|ぶぜんごう|打刀|江|八代拓|津田穂波|2018-11-27
+162|祢々切丸|ねねきりまる|大太刀|—|松田健一郎|源覚|2018-12-18
+164|白山吉光|はくさんよしみつ|剣|粟田口|下野紘|猫缶まっしぐら|2019-02-19
+166|南海太郎朝尊|なんかいたろうちょうそん|打刀|—|野島健児|べっこ|2019-04-24
+168|肥前忠広|ひぜんただひろ|脇差|—|小松昌平|煮たか|2019-04-24
+170|北谷菜切|ちゃたんなきり|短刀|—|仲村宗悟|なまにくATK|2019-07-30
+172|桑名江|くわなごう|打刀|江|伊東健人|津田穂波|2019-09-24
+174|水心子正秀|すいしんしまさひで|打刀|—|阿部敦|クロサワテツ|2019-11-19
+176|源清麿|みなもときよまろ|打刀|—|赤羽根健治|しばの番茶|2019-11-19
+178|松井江|まついごう|打刀|江|土岐隼一|津田穂波|2019-12-10
+180|山鳥毛|さんちょうもう|太刀|福岡一文字|井上和彦|須田彩加|2019-12-24
+182|古今伝授の太刀|こきんでんじゅのたち|太刀|豊後国行平|平川大輔|しきみ|2020-04-28
+184|地蔵行平|じぞうゆきひら|打刀|豊後国行平|深町寿成|石商|2020-04-28
+186|治金丸|ちがねまる|脇差|—|熊谷健太郎|なまにくATK|2020-07-21
+188|日光一文字|にっこういちもんじ|太刀|福岡一文字|置鮎龍太郎|須田彩加|2020-08-10
+190|太閤左文字|たいこうさもんじ|短刀|左文字|大谷祐貴|鈴木次郎|2020-10-20
+192|五月雨江|さみだれごう|打刀|江|狩野翔|すし|2020-12-01
+194|大千鳥十文字槍|おおちどりじゅうもんじやり|槍|—|梅原裕一郎|minato|2020-12-17
+196|泛塵|はんじん|脇差|—|上村祐翔|双葉はづき|2021-01-01
+198|一文字則宗|いちもんじのりむね|太刀|福岡一文字|関俊彦|lack|2021-01-19
+200|村雲江|むらくもごう|打刀|江|江口拓也|津田穂波|2021-02-09
+202|姫鶴一文字|ひめつるいちもんじ|太刀|福岡一文字|西山宏太朗|須田彩加|2021-08-11
+204|福島光忠|ふくしまみつただ|太刀|長船|細谷佳正|風間雷太|2021-12-21
+206|七星剣|しちせいけん|剣|—|川島零士|渓白|2022-03-29
+208|丙子椒林剣|へいししょうりんけん|剣|—|羽多野渉|渓白|2024-07-02
+210|稲葉江|いなばごう|打刀|江|武内駿輔|萩谷薫|2022-04-26
+212|笹貫|ささぬき|太刀|—|高橋広樹|ウエハラ蜂|2022-07-26
+214|人間無骨|にんげんむこつ|槍|兼定|吉野裕行|AKIRA|2022-12-13
+216|八丁念仏|はっちょうねんぶつ|太刀|古備前|千葉翔也|すし|2023-01-14
+218|石田正宗|いしだまさむね|打刀|正宗|堀江瞬|LAM|2023-04-25
+220|実休光忠|じっきゅうみつただ|太刀|長船|子安武人|藤未都也|2023-06-20
+222|京極正宗|きょうごくまさむね|短刀|正宗|榊原優希|望月けい|2023-08-01
+224|孫六兼元|まごろくかねもと|打刀|—|杉田智和|lack|2023-10-17
+226|後家兼光|ごけかねみつ|打刀|長船|福山潤|およ|2023-12-19
+228|火車切|かしゃぎり|脇差|広光|浦和希|saino|2024-01-16
+230|富田江|とみたごう|打刀|江|小野賢章|津田穂波|2024-04-09
+232|大慶直胤|たいけいなおたね|打刀|—|井上雄貴|釧路くき|2024-04-30
+234|九鬼正宗|くきまさむね|短刀|正宗|梶田大嗣|七癖みり|2024-08-13
+236|雲生|うんしょう|太刀|鵜飼|笠間淳|二色こぺ|2024-10-22
+238|道誉一文字|どうよいちもんじ|太刀|福岡一文字|楠大典|KiKi|2024-12-17
+240|雲次|うんじ|太刀|鵜飼|水島大宙|二色こぺ|2025-02-12
+242|面影|おもかげ|太刀|来|寺島拓篤|野崎つばた|2025-04-22
+244|古備前信房|こびぜんのぶふさ|太刀|古備前|大塚剛央|先崎真琴|2025-07-01
+246|倶利伽羅江|くりからごう|短刀|—|土屋神葉|岩本ゼロゴ|2025-09-09
+248|三郎国宗|さぶろうくにむね|太刀|—|山崎たくみ|AU|2025-11-25
+250|安宅切|あたきぎり|打刀|長船|手塚ヒロミチ|およ|2025-12-16
+252|二筋樋貞宗|ふたすじひさだむね|打刀|貞宗|田所陽向|夏子|2026-01-14
+254|雲重|うんじゅう|打刀|鵜飼|仲村宗悟|ぶくろて|2026-02-12
+256|柏太刀|かしわだち|大太刀|—|岩中睦樹|村カルキ|2026-04-21
+258|波平行安|なみのひらゆきやす|太刀|波平|木村太飛|ウエハラ蜂|2026-06-30
+260|狐ヶ崎為次|きつねがさきためつぐ|太刀|青江|||2026
+262|桃太郎祐定|ももたろうすけさだ|大太刀|長船|||2026-10-06
+264|朝倉藤四郎|あさくらとうしろう|短刀|粟田口|小村将|岩本ゼロゴ|2026-10-13`;
+
+const TYPES = ["短刀","脇差","打刀","太刀","大太刀","槍","薙刀","剣"];
+const BLADES = RAW.split("\n").map(l=>{const [no,name,kana,type,school,cv,art,date]=l.split("|");return {no:+no,name,kana,type,school,cv,art,date}});
+const BIOS = {"0": "原型是天下五剑之一的童子切安纲，相传源赖光以此刀斩杀大江山的酒吞童子，现为国宝。「剥落」是游戏中带有特殊设定的形态。", "3": "三条宗近所作，天下五剑之一，被誉为五剑中最美的一振，因刃纹中有新月形的打除而得名。曾为足利家、丰臣家所藏，后归德川家。", "5": "传说三条宗近奉命打造此刀时，稻荷明神化身童子前来相锤，因而得名小狐丸。原刀下落不明。", "7": "三条宗近所作的大太刀，供奉于大阪的石切劔箭神社，作为御神刀被视为祛病消灾的护身之刀。", "9": "传为武藏坊弁庆所用的大薙刀，据说刀身长达三尺五寸，现已不存。", "11": "传为源义经自幼佩带的护身短刀，义经最后在衣川以它自尽。实物下落不明。", "13": "三池典太光世所作，天下五剑之一。传说曾治好前田利家之女的病，被前田家视为家宝，现为国宝。", "15": "三池光世所作的太刀，德川家康晚年的爱刀。家康遗命将它刃口向西供奉于久能山，以镇守西国。", "17": "青江恒次所作，天下五剑之一。日莲上人为驱邪而佩带，并在柄上挂了念珠，故名数珠丸，现藏于尼崎本兴寺。", "19": "传说斩了一个对人「にっかり」微笑的女幽灵，连旁边的石灯笼也一并斩开，因此得名。", "21": "粟田口国纲所作，天下五剑之一。传说北条时赖梦中受小鬼纠缠，此刀自行倒下斩落火盆上的小鬼，鬼丸之名由此而来。现为皇室御物。", "23": "粟田口国吉所作的打刀，「鸣狐」这一名字的由来已不可考。", "25": "粟田口吉光一生只打造了这一振太刀，故名「一期一振」。曾为丰臣秀吉所有，大坂城陷落时被烧，后由德川家重新淬炼。", "27": "刀身形似鲶鱼尾而得名，原为薙刀改制的胁差。在明历大火中被烧毁，现存为再刃之作。", "29": "传说只要作势挥砍，对手的骨头就会被粉碎，因此得名。曾为足利家、丰臣家所藏，后由德川家再刃。", "31": "粟田口吉光所作短刀，名字被认为来自早期的持有者平野氏，后为前田家所藏。", "33": "粟田口吉光所作短刀，刀身厚实（「厚」重ね）而得名，现为国宝。", "35": "粟田口吉光所作短刀，名字来源于金工名家后藤家，后为前田家所藏。", "37": "粟田口吉光所作短刀，名字被认为来源于持有者的官名「信浓守」。", "39": "粟田口吉光所作短刀，前田家传来，因此得名前田藤四郎。", "41": "粟田口吉光所作短刀，因出羽秋田家传来而得名。", "43": "粟田口吉光所作短刀，黑田家在博多所得，故名博多藤四郎。", "45": "粟田口吉光所作短刀中少见的乱刃，因刃纹而得名「乱」。", "47": "传说出使明朝的使者途中遇虎，以此刀击退五只老虎，因此得名五虎退。", "49": "畠山政长欲以此刀切腹，却怎么也刺不进去；随手一扔，刀竟刺穿了一旁的铁药碾（药研），故名。后为织田信长所有，在本能寺之变中下落不明。", "51": "粟田口吉光所作短刀，刀身宽而短，形似菜刀，故名包丁藤四郎。", "53": "古备前包平所作的太刀，冈山池田家传来，被称为「日本刀的最高杰作」之一，与童子切并称「东西横纲」。现为国宝。", "55": "古备前友成所作的太刀，名字来源不详。现为皇室御物。", "57": "来国行所作的太刀，因明石松平家传来而得名，现为国宝。", "59": "来国俊所作的大太刀，阿苏惟澄在战后发现刀刃缺口处聚满萤火，次日刀刃便恢复如初，故名萤丸。二战后下落不明。", "61": "来国俊所作短刀，刀身雕有爱染明王，故名。", "63": "伊势桑名的刀工千子村正所作。传说村正之刀多次给德川家带来灾祸，因此有「妖刀」之称。", "65": "本多忠胜的爱枪，天下三名枪之一。传说一只蜻蜓停在枪尖上就被切成两半，因而得名。", "67": "德川家康的爱刀。据说家康每次佩带此刀出阵都能得胜，「物吉」即吉祥之意。", "69": "伊达家传来的贞宗短刀，名字的由来众说纷纭。", "71": "茎（刀柄部分）上雕有龟甲纹，故名龟甲贞宗。原为出云松平家所藏，现为国宝。", "73": "长船光忠所作。伊达政宗斩杀家臣时，连同其身后的青铜烛台一并斩断，故名「烛台切」。在关东大地震中被烧，现存为烧身。", "75": "长船长光所作的太刀，室町时代估价六百贯，与《大般若经》六百卷相应，故名大般若。", "77": "长船景光所作，刀身雕有倶利伽罗龙（小龙），传为楠木正成的佩刀，后为皇室御物。", "79": "左文字所作，原为北条家家臣板部冈江雪斋所持，故名江雪左文字。", "81": "左文字所作，先后为三好宗三、今川义元、织田信长所有，也称「义元左文字」。信长在其上刻下「织田尾张守信长」的金象嵌铭。", "83": "左文字所作短刀。传说一名武士在佐夜中山被杀，其遗子用此刀为父报仇，故名小夜左文字。", "85": "加贺清光所作的打刀，新选组冲田总司的爱刀，相传在池田屋事件中刀尖折损。", "87": "大和守安定所作的打刀，同样是冲田总司的佩刀。", "89": "和泉守兼定（之定）所作。细川忠兴以此刀斩杀了三十六名家臣，借「三十六歌仙」之名称为「歌仙」。", "91": "十一代和泉守兼定所作，新选组副长土方岁三的佩刀，现藏于土方岁三资料馆。", "93": "陆奥守吉行所作，坂本龙马的佩刀，据说龙马遇刺时也带着它。", "95": "堀川国广所作，是长船长义所作「山姥切」的仿作（写し），二者同为重要文化财。", "97": "堀川国广所作，相传是国广在山伏修行期间打造的太刀。", "99": "堀川国广所作的胁差，传为土方岁三所用，但真伪存疑。", "101": "长曾祢虎彻所作，阿波蜂须贺家传来，故名。", "103": "长曾祢虎彻所作的胁差，刀身雕有浦岛太郎骑龟的图样，故名。", "105": "长曾祢虎彻名下的刀，新选组局长近藤勇的佩刀，但一般认为近藤所持的是一振赝作。", "107": "源氏重宝之一，相传以此刀斩下罪人首级时连胡须一同斩断，故名「髭切」。与膝丸为兄弟刀。", "112": "源氏重宝之一，相传试斩时连同膝盖一并斩断，故名「膝丸」。后来也被称为「蜘蛛切」「薄绿」等。", "116": "相州广光所作，刀身雕有倶利伽罗龙，伊达政宗的爱刀，故名大倶利伽罗。", "118": "织田信长以此刀斩杀躲在橱柜下的茶坊主，只是把刀压上去就连橱柜一起切开，故名「压切」。后赐予黑田家，现为国宝。", "120": "织田信长的爱刀，后赐予森兰丸，在本能寺之变中随主人而去。", "122": "源赖政退治怪物鵺之后，朝廷赐予的太刀，故名狮子王。", "124": "传为天国所作，平家的重宝。据说此刀是从伊势神宫飞来的大乌鸦口中所得，故名小乌丸，现为皇室御物。", "126": "平家重宝。传说平忠盛午睡时有大蛇逼近，此刀自行出鞘将蛇吓退，因此得名拔丸。", "128": "肥后同田贯派所作，以实用耐砍著称，被视为武骨的实战之刀。", "130": "五条国永所作的太刀，辗转于多位主人之手，最后成为皇室御物。据传刀主曾为此刀盗墓、开棺。", "132": "真柄直隆在姊川之战中使用的大太刀之一，供奉于热田神宫，长达五尺三寸。", "134": "与太郎太刀同为真柄家的大太刀，同样供奉于热田神宫。", "136": "天下三名枪之一，曾获「正三位」官位。黑田家家臣母里友信在饮酒比赛中从福岛正则手中赢得此枪，也就是民谣《黑田节》的由来。", "138": "天下三名枪之一，结城家传来。因枪鞘形似手杵（杵）而得名，在东京大空袭中被烧毁。", "140": "巴形薙刀并非特定的某一振，而是以「巴形」形状为共同点的薙刀集合体。", "142": "粟田口吉光所作短刀，安艺毛利家传来，故名，现为皇室御物。", "144": "乡义弘所作，相传曾连同铠甲的护手（篭手）一并斩断，故名「篭手切」。", "146": "长船景光所作短刀，上杉谦信的爱刀，刀身刻有「秩父大菩萨」。", "148": "长船长光所作的太刀，上杉谦信的佩刀。传说一颗小豆落在刀刃上便被切成两半，故名。", "150": "相传为正宗所作的短刀，水野胜成（日向守）所持，故名。", "152": "静形薙刀与巴形薙刀同样是以形状为共同点的薙刀集合体，「静形」之名来自静御前。", "154": "山城的一文字派所作，相传南泉和尚用它斩猫，名字取自「南泉斩猫」的公案。", "156": "琉球尚家的宝刀，与北谷菜切、治金丸并称尚家三宝。", "158": "长船长义所作，山姥切国广的「本歌」。传说曾在信浓山中斩杀山姥，因而得名。", "160": "乡义弘所作，因丰前守所持而得名，下落已不可考。", "162": "日光二荒山神社的御神刀。传说山中有名为「祢々」的妖怪作乱，此刀自行出鞘将其斩杀。", "164": "粟田口吉光所作的剑，由前田家奉纳给白山比咩神社，现为国宝。", "166": "土佐出身的刀工南海太郎朝尊所作。朝尊也是研究锻刀理论的学者型刀工。", "168": "肥前刀工忠广所作，传为土佐的「人斩」冈田以藏所用。", "170": "琉球尚家三宝之一。传说一名农妇用它切菜时，刀锋竟斩到了在旁的孩子，故名「菜切」。", "172": "乡义弘所作，伊势桑名本多家传来，故名桑名江。", "174": "江户三作之一的水心子正秀所作，他提倡回归古刀锻法的「复古刀」理论。", "176": "江户三作之一，人称「四谷正宗」的源清麿所作的打刀。", "178": "乡义弘所作，细川家家老松井家传来，故名松井江。", "180": "福冈一文字派所作的太刀，上杉谦信的爱刀，刃纹华丽如山鸟羽毛，现为国宝。", "182": "豊后行平所作，细川幽斋在传授「古今传授」时赠予八条宫智仁亲王，故名。", "184": "豊后行平所作，刀身雕有地藏像，故名地藏行平。", "186": "琉球尚家三宝之一，与千代金丸、北谷菜切并称。", "188": "福冈一文字派所作，北条早云的佩刀，后献给日光二荒山神社，现为国宝。", "190": "左文字所作短刀，丰臣秀吉（太阁）所持，故名。", "192": "乡义弘所作，尾张德川家传来。名字来源有多种说法，一说与梅雨时节有关。", "194": "传为真田信繁（幸村）所用的十文字枪。", "196": "传为真田信繁（幸村）所用的胁差，「泛尘」意为浮于世间的尘埃。", "198": "福冈一文字派则宗所作，也被称为「菊一文字」。民间流传它是冲田总司的爱刀，但并无史实依据。", "200": "乡义弘所作，名字来源说法不一，与五月雨江被视为一对。", "202": "福冈一文字派所作，上杉家传来。传说刀主梦见一位名叫「鹤」的姬君前来，请求不要磨短此刀，故名姬鹤。", "204": "长船光忠所作，福岛正则所持而得名。", "206": "传为圣德太子所佩的直刀，刀身镶嵌北斗七星图样，大阪四天王寺所藏，现为国宝。", "208": "与七星剑同为四天王寺所藏、传为圣德太子佩用的直刀，刀身刻有「丙子椒林」四字，现为国宝。", "210": "乡义弘所作，稻叶正成所持而得名，与富田江同为江的名刀，现为国宝。", "212": "萨摩国波平派所作。传说此刀被丢弃在竹林中，竹叶落下便被刀刃贯穿，故名「笹贯」。", "214": "和泉守兼定（之定）所作的十文字枪，「鬼武藏」森长可所用。枪身刻有「人间无骨」，意为人如无骨，一刺即穿。", "216": "据说用此刀斩人之后，对方仍念着佛走出了八町才倒下，因此得名「八丁念佛」。", "218": "相州正宗所作，石田三成所持，后赠予结城秀康。刀身有砍痕，也称「切込正宗」。", "220": "长船光忠所作，三好实休的爱刀，后为织田信长所有，在本能寺之变中被烧。", "222": "相州正宗所作的短刀，近江京极家传来，故名。", "224": "美浓关的刀工孙六兼元所作，以「三本杉」刃纹和锋利著称。", "226": "长船兼光所作，上杉景胜的家臣直江兼续死后由其遗孀（后家）献给上杉家，故名。", "228": "相州广光所作的胁差，相传曾斩杀妖怪「火车」，故名火车切。", "230": "乡义弘所作，富田一白所持而得名，与稻叶江并称江的天下第一，现为国宝。", "232": "江户三作之一的大庆直胤所作，他是水心子正秀的大弟子。", "234": "相州正宗所作的短刀，九鬼水军的九鬼家传来，故名。", "236": "备前国宇甘乡（鹈饲派）刀工云生所作的太刀。", "238": "福冈一文字派所作，南北朝时代的婆娑罗大名佐佐木道誉所持而得名。", "240": "鹈饲派刀工云次所作的太刀，云生之子。", "242": "来派之刀。《太平记》中记载长崎为基所用之刀名为「面影」。", "244": "古备前派刀工信房所作的太刀。", "246": "乡义弘所作，刀身雕有倶利伽罗龙，相传为明智光秀所持。", "248": "备前国宗所作的太刀，国宗为直宗之子，排行第三，故称「备前三郎」。萨摩岛津家传来，现为国宝。", "250": "长船祐定所作，黑田家传来的名物，相传因斩杀名为「安宅」的人物而得名。", "252": "贞宗所作的打刀，刀身有两道血槽（二筋樋）。原为丰臣秀吉所有，也称「大坂贞宗」，后赐予结城秀康，由越前松平家传承。", "254": "鹈饲派刀工云重所作的打刀，与云生、云次同属一门。", "256": "大太刀，自称「三口御神刀」之一。名字来自被视为「叶守之神」栖身之树的柏树。", "258": "萨摩国波平派刀工行安所作的太刀。波平派自平安时代起世代相传，是绵延最久的刀工一门之一。", "260": "青江为次所作的太刀，吉川家传来。镰仓初年吉香友兼在骏河狐崎与梶原一族交战，以此刀奋战，故名，现为国宝。", "262": "长船派刀工祐定所作的大太刀。现有资料较少，详情可在游戏内回想中了解。", "264": "粟田口吉光所作的短刀，名字被认为与越前朝仓氏有关。现有资料较少，详情可在游戏内回想中了解。"};
+const BYNO = new Map(BLADES.map(b=>[b.no,b]));
+// 刀帐立绘：0 未解锁 · 1 已解锁 · 2 暂未实装（不计入）
+const ARTS=[["shinken","真剣必殺"],["naiban","内番"],["keisou","軽装"],["shukusou","祝装"]];
+const KARTS=[["kshinken","極 · 真剣必殺"],["knaiban","極 · 内番"]];
+const ARTV=["未解锁","已解锁","暂未实装"];
+function artKeys(s){return s?(s.kiw?ARTS.concat(KARTS):ARTS):[]}
+function artStat(s){let d=0,t=0;for(const [k] of artKeys(s)){const v=(s.art||{})[k]||0;if(v!==2){t++;if(v===1)d++}}return {d,t}}
+
+
+// ---------- state & persistence ----------
+let state = {};           // { [no]: {own:true, kiw:bool, date:"", note:""} }
+let store = null;         // db doc ref when available
+let writing = Promise.resolve(), pending = null, saveTimer = null;
+const LS = "touchou-v1";
+const $ = s=>document.querySelector(s);
+function lsGet(){try{return JSON.parse(localStorage.getItem(LS)||"{}")}catch(e){return {}}}
+function lsSet(){try{localStorage.setItem(LS,JSON.stringify(state))}catch(e){}}
+function setSave(t){ $("#saveState").textContent=t }
+
+let dirty=false, lastFocus=null;
+const SB_URL="https://xkonlyobycpipcuekjpx.supabase.co";
+const SB_KEY="sb_publishable_1KWlRfKjpw7-pGtGyvwQfQ_HWP5llst";
+let sb=null, session=null;
+try{ if(window.supabase) sb=window.supabase.createClient(SB_URL,SB_KEY,{auth:{persistSession:true,detectSessionInUrl:false}}); }catch(e){ sb=null }
+
+function persist(){
+  dirty=true;
+  lsSet();
+  if(!session){ return }
+  clearTimeout(saveTimer);
+  setSave("保存中…");
+  saveTimer=setTimeout(()=>{
+    const body={user_id:session.user.id,owned:JSON.parse(JSON.stringify(state)),updated_at:new Date().toISOString()};
+    writing=writing.then(async()=>{
+      const {error}=await sb.from("touchou_saves").upsert(body);
+      if(error) throw error;
+      setSave("已同步到云端 · "+uname(session.user));
+    }).catch(()=>setSave("云端同步失败，已保存在本浏览器，稍后再改动会重试"));
+  },700);
+}
+
+async function loadRemote(){
+  if(!sb||!session) return;
+  setSave("正在读取云端存档…");
+  const {data,error}=await sb.from("touchou_saves").select("owned").eq("user_id",session.user.id).maybeSingle();
+  if(error){ setSave("读取云端存档失败，暂用本浏览器的记录"); return }
+  if(data&&data.owned){
+    const remote=JSON.parse(JSON.stringify(data.owned));
+    // 合并：本浏览器有而云端没有的刀，一并保留
+    const local=JSON.parse(JSON.stringify(state));
+    state=Object.assign({},local,remote);
+    if(dirty) Object.assign(state,local);
+    lsSet(); renderAll();
+    if(Object.keys(state).length!==Object.keys(remote).length||dirty) persist(); else setSave("已同步到云端 · "+uname(session.user));
+  } else {
+    persist();
+  }
+}
+
+function renderAccount(){
+  const el=$("#acct");
+  if(!sb){ el.innerHTML=`<span class="msg">云端同步暂不可用</span>`; return }
+  el.innerHTML=session
+    ? `<span class="msg">已登录：${esc(uname(session.user))}</span> <button class="ghost" id="logout">退出登录</button>`
+    : `<button class="ghost" id="login">登录 / 注册，跨设备同步</button>`;
+  const lo=$("#logout"), li=$("#login");
+  if(lo) lo.onclick=async()=>{await sb.auth.signOut();};
+  if(li) li.onclick=openLogin;
+}
+
+const UDOM="@touchou-user.com";
+const uname=u=>(u&&u.email||"").replace(UDOM,"");
+function openLogin(){
+  lastFocus=document.activeElement;
+  let mode="in";
+  const draw=()=>{
+  $("#sheet").innerHTML=`
+    <button class="ghost x" id="close">关闭</button>
+    <h2 id="dName">${mode==="in"?"登录":"注册"}</h2>
+    <p class="msg">${mode==="in"?"用注册时的用户名和密码登录，你的刀帐会从云端同步过来。":"注册一个用户名，以后在任何设备上用它登录，刀帐就会同步。不需要邮箱。"}</p>
+    <form id="lf" class="toggles" style="flex-direction:column;align-items:stretch">
+      <label for="un">用户名（3–20 位字母、数字或下划线）</label>
+      <input id="un" required autocomplete="username" pattern="[A-Za-z0-9_]{3,20}" autocapitalize="off" spellcheck="false" style="font:inherit;padding:9px;border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--ink)">
+      <label for="pw">密码（至少 6 位）</label>
+      <input id="pw" type="password" required minlength="6" autocomplete="${mode==="in"?"current-password":"new-password"}" style="font:inherit;padding:9px;border:1px solid var(--line);border-radius:2px;background:#fff;color:var(--ink)">
+      <button class="tg" type="submit" aria-pressed="true">${mode==="in"?"登录":"注册并登录"}</button>
+    </form>
+    <p class="msg" id="lmsg"></p>
+    <p class="msg">${mode==="in"?`还没有账号？<a href="#" id="sw" style="color:var(--kin)">注册一个</a>`:`已经有账号？<a href="#" id="sw" style="color:var(--kin)">去登录</a>`}</p>
+    <p class="msg">请记好密码：网站没有绑定邮箱，忘记密码无法找回。不登录也能正常使用，记录会保存在这个浏览器里。</p>`;
+  $("#close").onclick=closeSheet;
+  $("#sw").onclick=e=>{e.preventDefault();mode=mode==="in"?"up":"in";draw();$("#un").focus()};
+  $("#lf").addEventListener("submit",async e=>{
+    e.preventDefault();
+    const u=$("#un").value.trim().toLowerCase(), pw=$("#pw").value;
+    if(!/^[a-z0-9_]{3,20}$/.test(u)){$("#lmsg").textContent="用户名只能用 3–20 位字母、数字或下划线。";return}
+    const btn=e.target.querySelector("button"); btn.disabled=true; $("#lmsg").textContent=mode==="in"?"登录中…":"注册中…";
+    const cred={email:u+UDOM,password:pw};
+    const {data,error}=mode==="in"?await sb.auth.signInWithPassword(cred):await sb.auth.signUp(cred);
+    btn.disabled=false;
+    if(error){
+      const m=error.message||"";
+      $("#lmsg").textContent=/Invalid login/i.test(m)?"用户名或密码不对。":/already registered|already exists/i.test(m)?"这个用户名已经被注册了，换一个试试，或者直接登录。":/rate|limit/i.test(m)?"操作太频繁了，请过一会儿再试。":/fetch|network/i.test(m)?"连不上同步服务器，请检查网络后再试。":"出错了："+m;
+      return;
+    }
+    if(mode==="up"&&!data.session){$("#lmsg").textContent="注册成功，但服务器要求邮箱验证，暂时无法登录。请联系网站管理员。";return}
+  });
+  };
+  draw();$("#sheet").hidden=false;$("#scrim").hidden=false;$("#un").focus();
+}
+
+async function initStore(){
+  state = lsGet(); renderAll();
+  setSave("记录保存在本浏览器");
+  renderAccount();
+  if(!sb) return;
+  sb.auth.onAuthStateChange((ev,s)=>{
+    const was=session&&session.user.id;
+    session=s||null; renderAccount();
+    if(session&&session.user.id!==was){ loadRemote(); if(!$("#sheet").hidden&&$("#lf")) closeSheet(); }
+    if(!session&&was){ setSave("已退出登录，记录保存在本浏览器"); }
+  });
+  const {data}=await sb.auth.getSession();
+  session=data.session||null; renderAccount();
+  if(session) loadRemote();
+}
+
+// ---------- filters ----------
+const F={q:"",type:"",school:"",st:"all"};
+const schools=[...new Set(BLADES.map(b=>b.school))].sort((a,b)=>a==="—"?1:b==="—"?-1:a.localeCompare(b,"ja"));
+$("#school").innerHTML=`<option value="">全部刀派</option>`+schools.map(s=>`<option value="${s}">${s==="—"?"无刀派":s}</option>`).join("");
+
+function match(b){
+  const s=state[b.no];
+  if(F.type&&b.type!==F.type) return false;
+  if(F.school&&b.school!==F.school) return false;
+  if(F.st==="own"&&!s) return false;
+  if(F.st==="miss"&&s) return false;
+  if(F.st==="kiw"&&!(s&&s.kiw)) return false;
+  if(F.st==="art"){if(!s)return false;const a=artStat(s);if(a.d>=a.t)return false}
+  if(F.q){const q=F.q.toLowerCase();const hay=(b.name+b.kana+b.school+b.type+b.cv+b.art+String(b.no)).toLowerCase();if(!hay.includes(q))return false}
+  return true;
+}
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const isNew=b=>b.date>="2026-07";
+
+function renderGrid(){
+  const list=BLADES.filter(match);
+  $("#count").textContent=`显示 ${list.length} 振`;
+  $("#grid").innerHTML=list.length?list.map(b=>{
+    const s=state[b.no];const cls=s?(s.kiw?"own kiw":"own"):"";
+    return `<button class="slot ${cls}" data-no="${b.no}" aria-label="${esc(b.name)}，${s?(s.kiw?"已极化":"已入手"):"未入手"}">
+      <span class="no">${String(b.no).padStart(3,"0")}</span>
+      <span class="nm">${esc(b.name)}</span>
+      <span class="meta">${b.type}${b.school!=="—"?" · "+esc(b.school):""}</span>
+      ${s?`<span class="dots" aria-hidden="true">${artKeys(s).map(([k])=>{const v=(s.art||{})[k]||0;return `<i class="${v===1?"on":v===2?"na":""}${k[0]==="k"&&k!=="keisou"?" k":""}"></i>`}).join("")}</span>`:""}
+      ${s&&s.kiw?`<span class="kw" aria-hidden="true">極</span>`:""}
+      ${isNew(b)?`<span class="new">新</span>`:""}
+    </button>`}).join(""):`<div class="empty-msg">没有符合条件的刀剑男士</div>`;
+}
+function renderStats(){
+  const own=BLADES.filter(b=>state[b.no]).length, kiw=BLADES.filter(b=>state[b.no]&&state[b.no].kiw).length;
+  $("#ownN").textContent=own; $("#allN").textContent=BLADES.length;
+  $("#kiwN").textContent=kiw?`其中极 ${kiw}`:"";
+  let ad=0,at=0;BLADES.forEach(b=>{const s=state[b.no];if(s){const a=artStat(s);ad+=a.d;at+=a.t}});
+  $("#artSum").innerHTML=at?`刀帐立绘 <b>${ad}/${at}</b> 张已解锁`:"标记入手后，可以在详情里记录立绘解锁";
+  $("#ownBar").style.width=(own/BLADES.length*100)+"%";
+  $("#meters").innerHTML=TYPES.map(t=>{const all=BLADES.filter(b=>b.type===t);const o=all.filter(b=>state[b.no]).length;
+    return `<button class="meter" data-type="${t}" aria-pressed="${F.type===t}"><div class="l"><b>${t}</b><span>${o}/${all.length}</span></div><div class="bar"><i style="width:${o/all.length*100}%"></i></div></button>`}).join("");
+}
+function renderAll(){renderStats();renderGrid()}
+
+// ---------- interactions ----------
+$("#q").addEventListener("input",e=>{F.q=e.target.value.trim();renderGrid()});
+$("#school").addEventListener("change",e=>{F.school=e.target.value;renderGrid()});
+document.querySelectorAll(".seg button").forEach(b=>b.addEventListener("click",()=>{
+  F.st=b.dataset.st;document.querySelectorAll(".seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));renderGrid()}));
+$("#meters").addEventListener("click",e=>{const m=e.target.closest(".meter");if(!m)return;F.type=F.type===m.dataset.type?"":m.dataset.type;renderAll()});
+
+function toggleOwn(no){ if(state[no]) delete state[no]; else state[no]={own:true,kiw:false,date:"",note:""}; persist(); renderAll(); }
+let clickT=null;
+$("#grid").addEventListener("click",e=>{
+  const s=e.target.closest(".slot");if(!s)return;const no=+s.dataset.no;
+  if(e.shiftKey){toggleOwn(no);return}
+  if(e.detail===2){clearTimeout(clickT);toggleOwn(no);return}
+  clearTimeout(clickT);clickT=setTimeout(()=>openSheet(no),220);
+});
+
+function closeSheet(){$("#sheet").hidden=true;$("#scrim").hidden=true;if(lastFocus)lastFocus.focus()}
+$("#scrim").addEventListener("click",closeSheet);
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#sheet").hidden)closeSheet()});
+
+function openSheet(no){
+  const b=BYNO.get(no);lastFocus=document.activeElement;
+  const draw=()=>{
+    const s=state[no];
+    const q=encodeURIComponent(b.name);
+    $("#sheet").innerHTML=`
+      <button class="ghost x" id="close">关闭</button>
+      <div class="hero"><div><div class="no">刀帳 第${String(b.no).padStart(3,"0")}番</div><h2 id="dName">${esc(b.name)}</h2><div class="kana">${esc(b.kana)}</div></div></div>
+      <div class="sec">刀剣情報</div>
+      <dl>
+        <dt>刀种</dt><dd>${b.type}</dd>
+        <dt>刀派</dt><dd>${b.school==="—"?"无":esc(b.school)}</dd>
+        <dt>声优</dt><dd>${b.cv?esc(b.cv):"—"}</dd>
+        <dt>绘师</dt><dd>${b.art?esc(b.art):"—"}</dd>
+        <dt>实装</dt><dd>${b.date&&b.date.length>4?b.date.replace(/-/g,"."):"2026 年"}</dd>
+      </dl>
+      ${BIOS[b.no]?`<div class="sec">来历</div><p class="bio">${esc(BIOS[b.no])}</p>`:""}
+      <div class="sec">入手</div>
+      <div class="toggles">
+        <button class="tg" id="tOwn" aria-pressed="${!!s}">${s?"已入手":"标记为已入手"}</button>
+        <button class="tg k" id="tKiw" aria-pressed="${!!(s&&s.kiw)}" ${s?"":"disabled"}>${s&&s.kiw?"已极化":"标记为极"}</button>
+      </div>
+      <div class="sec">刀帳立绘</div>
+      <div><label>点一下切换：未解锁 → 已解锁 → 暂未实装</label>
+        <div class="arts" style="margin-top:6px">${(s?artKeys(s):ARTS).map(([k,n])=>{const v=s?((s.art||{})[k]||0):0;return `<button class="ac${k==="kshinken"||k==="knaiban"?" k":""}" data-k="${k}" data-v="${v}" ${s?"":"disabled"}>${n}<small>${ARTV[v]}</small></button>`}).join("")}</div>
+        ${s&&!s.kiw?`<p class="msg" style="margin:6px 0 0">标记为极之后，会多出极的真剣必殺和内番。</p>`:""}${s?"":`<p class="msg" style="margin:6px 0 0">先标记入手才能记录立绘。</p>`}
+      </div>
+      ${s?`<div class="sec">记录</div><div><label for="dDate">入手日期</label><input type="date" id="dDate" value="${esc(s.date||"")}"></div>
+      <div><label for="dNote">备注（等级、刀装、想说的话）</label><textarea id="dNote">${esc(s.note||"")}</textarea></div>`:""}
+      <div class="links msg">查资料：<a href="https://zh.moegirl.org.cn/刀剑乱舞:${q}" target="_blank" rel="noopener">萌娘百科</a> · <a href="https://wikiwiki.jp/toulove/${q}" target="_blank" rel="noopener">とうらぶ Wiki</a></div>`;
+    $("#close").onclick=closeSheet;
+    $("#tOwn").onclick=()=>{toggleOwn(no);draw()};
+    $("#tKiw").onclick=()=>{if(!state[no])return;state[no].kiw=!state[no].kiw;persist();renderAll();draw()};
+    document.querySelectorAll("#sheet .ac").forEach(btn=>btn.onclick=()=>{const st=state[no];if(!st)return;st.art=st.art||{};const k=btn.dataset.k;st.art[k]=(((st.art[k]||0)+1)%3);persist();renderAll();draw()});
+    if(s){
+      $("#dDate").onchange=e=>{state[no].date=e.target.value;persist()};
+      $("#dNote").oninput=e=>{state[no].note=e.target.value;persist()};
+    }
+  };
+  draw();$("#sheet").hidden=false;$("#scrim").hidden=false;$("#close").focus();
+}
+
+$("#backupBtn").addEventListener("click",()=>{
+  lastFocus=document.activeElement;
+  $("#sheet").innerHTML=`
+    <button class="ghost x" id="close">关闭</button>
+    <h2 id="dName">备份 / 导入</h2>
+    <p class="msg">下面是你的刀帐存档。复制保存好，以后可以粘贴回来恢复。也可以只粘贴一串刀帐编号（如 3,5,7,11），会把它们标为已入手。</p>
+    <div class="backup"><textarea id="bk" aria-label="存档内容">${esc(JSON.stringify(state))}</textarea></div>
+    <div class="toggles"><button class="tg" id="cp">复制</button><button class="tg" id="im">导入并覆盖</button></div>
+    <p class="msg" id="bkMsg"></p>`;
+  $("#close").onclick=closeSheet;
+  $("#cp").onclick=()=>{const t=$("#bk");navigator.clipboard.writeText(t.value).then(()=>$("#bkMsg").textContent="已复制").catch(()=>{t.select();$("#bkMsg").textContent="请按 Ctrl/⌘+C 复制已选中的内容"})};
+  $("#im").onclick=()=>{
+    const v=$("#bk").value.trim();let next=null;
+    try{const o=JSON.parse(v);if(o&&typeof o==="object"&&!Array.isArray(o))next=o;}catch(e){}
+    if(!next){const nums=v.split(/[^0-9]+/).filter(Boolean).map(Number).filter(n=>BYNO.has(n));
+      if(nums.length){next={};nums.forEach(n=>next[n]={own:true,kiw:false,date:"",note:""})}}
+    if(!next){$("#bkMsg").textContent="没看懂这段内容。请粘贴之前复制的存档，或用逗号分隔的刀帐编号。";return}
+    state={};for(const k in next){if(BYNO.has(+k))state[k]=next[k]}
+    persist();renderAll();$("#bkMsg").textContent=`已导入 ${Object.keys(state).length} 振`;
+  };
+  $("#sheet").hidden=false;$("#scrim").hidden=false;$("#close").focus();
+});
+
+// ---------- 落樱 ----------
+(function(){
+  const cv=document.getElementById("petals");
+  if(!cv||matchMedia("(prefers-reduced-motion: reduce)").matches){if(cv)cv.hidden=true;return}
+  const ctx=cv.getContext("2d");let W,H,dpr;const P=[];
+  function size(){dpr=Math.min(2,devicePixelRatio||1);W=innerWidth;H=innerHeight;cv.width=W*dpr;cv.height=H*dpr;cv.style.width=W+"px";cv.style.height=H+"px";ctx.setTransform(dpr,0,0,dpr,0,0)}
+  size();addEventListener("resize",size);
+  const N=Math.round(Math.min(22,W/50));
+  for(let i=0;i<N;i++)P.push({x:Math.random()*W,y:Math.random()*H,s:4+Math.random()*5,vy:.25+Math.random()*.45,vx:.15+Math.random()*.35,a:Math.random()*6.28,va:(Math.random()-.5)*.03,ph:Math.random()*6.28});
+  function tick(){
+    if(document.hidden){requestAnimationFrame(tick);return}
+    ctx.clearRect(0,0,W,H);
+    for(const p of P){
+      p.ph+=.01;p.x+=p.vx+Math.sin(p.ph)*.3;p.y+=p.vy;p.a+=p.va;
+      if(p.y>H+10){p.y=-10;p.x=Math.random()*W}
+      if(p.x>W+10)p.x=-10;
+      ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.a);ctx.scale(1,.55+.45*Math.abs(Math.sin(p.ph*2)));
+      ctx.fillStyle="rgba(222,140,162,.45)";ctx.beginPath();
+      ctx.moveTo(0,-p.s);ctx.bezierCurveTo(p.s,-p.s*.6,p.s*.8,p.s*.7,0,p.s);ctx.bezierCurveTo(-p.s*.8,p.s*.7,-p.s,-p.s*.6,0,-p.s);
+      ctx.fill();ctx.restore();
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+})();
+
+// ---------- 限时锻刀计算 ----------
+const FDEF={e1:false,e2:false,e3:false,e4:false,u1:700,u2:700,u3:700,u4:700,cnt:true,r1:60000,r2:60000,r3:60000,r4:60000,tk:100,ten:true,c4:0,c3:0,c2:0,c1:0,p:0.2,ceil:5000,p0:5,p1:10,p2:15,p3:20,p4:60};
+const FKEYS=Object.keys(FDEF);FDEF.v=2;
+let FS=Object.assign({},FDEF);
+try{Object.assign(FS,JSON.parse(localStorage.getItem("touchou-forge")||"{}"))}catch(e){}
+if(!FS.v){if(FS.p4===35)FS.p4=60;if(FS.p===1)FS.p=0.2;FS.v=2}
+function fFill(){FKEYS.forEach(k=>{const el=$("#f-"+k);if(el.type==="checkbox")el.checked=!!FS[k];else el.value=FS[k]})}
+function fRead(){FKEYS.forEach(k=>{const el=$("#f-"+k);if(el.type==="checkbox")FS[k]=el.checked;else{const v=parseFloat(el.value);FS[k]=isFinite(v)&&v>=0?v:0}});try{localStorage.setItem("touchou-forge",JSON.stringify(FS))}catch(e){}}
+const fmt=n=>Math.round(n).toLocaleString("zh-CN");
+const pct=x=>x>=0.9995?"100%":x<0.001?"<0.1%":(x*100).toFixed(x<0.1?1:0)+"%";
+function forgesFromTickets(t,ten){t=Math.floor(t);return ten?Math.floor(t/9)*10+t%9:t}
+function ticketsFor(n,ten){return ten?Math.floor(n/10)*9+n%10:n}
+function ptsAt(i){ // 第 i 次（0 起）的点数，御札优先用好的
+  let c=i; for(const [k,pk,ek] of [["c4","p4","e4"],["c3","p3","e3"],["c2","p2","e2"],["c1","p1","e1"]]){if(!FS[ek])continue;const n=Math.floor(FS[k]);if(c<n)return FS[pk];c-=n}
+  return FS.p0;
+}
+function forgeCalc(){
+  const p=Math.min(1,FS.p/100);
+  const U=[FS.u1,FS.u2,FS.u3,FS.u4], Rh=[FS.r1,FS.r2,FS.r3,FS.r4];
+  const byRes=Math.min(...U.map((u,i)=>u>0?Math.floor(Rh[i]/u):Infinity)), byTk=forgesFromTickets(FS.tk,FS.ten);
+  const minRes=0;
+  const N=Math.min(byRes,byTk);
+  // 天井次数
+  let K=Infinity;
+  if(FS.ceil>0&&FS.cnt){let cum=0;for(let i=0;i<200000;i++){cum+=ptsAt(i);if(cum>=FS.ceil){K=i+1;break} if(ptsAt(i)<=0&&i>Math.floor(FS.c1+FS.c2+FS.c3+FS.c4))break}}
+  let cumN=0;if(FS.cnt)for(let i=0;i<N;i++)cumN+=ptsAt(i);
+  const probBy=n=>n>=K?1:(p>=1?(n>0?1:0):1-Math.pow(1-p,n));
+  const prob=probBy(N);
+  const nFor=q=>{if(p<=0)return K;if(p>=1)return 1;const n=Math.ceil(Math.log(1-q)/Math.log(1-p));return Math.min(n,K)};
+  const exp=p>0?(isFinite(K)?(1-Math.pow(1-p,K))/p:1/p):K;
+  return {p,N,byRes,byTk,K,cumN,prob,probBy,n50:nFor(.5),n90:nFor(.9),exp,U,Rh};
+}
+function forgeRender(){
+  fRead();
+  ["1","2","3","4"].forEach(k=>{$("#f-c"+k).disabled=!FS["e"+k]});
+  const r=forgeCalc();
+  const lim=r.byRes<r.byTk?"资源":r.byTk<r.byRes?"依頼札":"资源和依頼札";
+  $("#f-summary").textContent=r.N>0?(`按现有${lim}，最多能锻 ${fmt(r.N)} 次`+(FS.cnt?`，可攒 ${fmt(r.cumN)} 顕現ポイント。`:"。这个配方不计天井。")):"现有资源或依頼札不够锻一次。";
+  $("#f-prob").textContent=pct(r.prob);
+  $("#f-sProb").className="stat "+(r.prob>=0.999?"ok":r.prob<0.5?"warn":"");
+  $("#f-n").textContent=fmt(r.N);
+  $("#f-ceilN").textContent=isFinite(r.K)?fmt(r.K):"—";
+  const rows=[];
+  if(isFinite(r.K)){
+    rows.push(["到天井需要资源",resText(r.U.map(u=>u*r.K))]);
+    rows.push(["到天井需要依頼札",`${fmt(ticketsFor(r.K,FS.ten))} 张`]);
+    const gap=r.U.map((u,i)=>Math.max(0,u*r.K-r.Rh[i]));
+    rows.push(["还差资源",gap.some(g=>g>0)?resText(gap,true):"够了"]);
+    rows.push(["还差依頼札",ticketsFor(r.K,FS.ten)>FS.tk?`${fmt(ticketsFor(r.K,FS.ten)-FS.tk)} 张`:"够了"]);
+  }
+  const used=[["e4","c4","富士"],["e3","c3","松"],["e2","c2","竹"],["e1","c1","梅"]].filter(([e,c])=>FS[e]&&FS[c]>0).map(([e,c,n])=>`${n} ${fmt(FS[c])}`);
+  rows.push(["使用御札",used.length?used.join(" · ")+" 张":"不用"]);
+  rows.push(["平均锻几次拿到",`约 ${fmt(r.exp)} 次`]);
+  rows.push(["平均要花资源",resText(r.U.map(u=>u*r.exp))]);
+  rows.push(["五成把握",`${fmt(r.n50)} 次`]);
+  rows.push(["九成把握",`${fmt(r.n90)} 次`]);
+  $("#f-rows").innerHTML=rows.map(([a,b])=>`<dt>${a}</dt><dd>${b}</dd>`).join("");
+  drawForgeChart(r);
+}
+function drawForgeChart(r){
+  const W=560,H=250,L=44,R=14,T=14,B=34,pw=W-L-R,ph=H-T-B;
+  let X=isFinite(r.K)?r.K:Math.max(r.n90*1.2,r.N,10);
+  X=Math.max(X,r.N,1);
+  const sx=n=>L+n/X*pw, sy=v=>T+(1-v)*ph;
+  const pts=[];const steps=120;
+  for(let i=0;i<=steps;i++){const n=Math.min(X,i/steps*X);pts.push([n,r.probBy(Math.floor(n))])}
+  if(isFinite(r.K)){pts.push([r.K-0.001,r.probBy(r.K-1)]);pts.push([r.K,1])}
+  pts.sort((a,b)=>a[0]-b[0]);
+  const line=pts.map((q,i)=>(i?"L":"M")+sx(q[0]).toFixed(1)+" "+sy(q[1]).toFixed(1)).join(" ");
+  const area=line+` L${sx(X).toFixed(1)} ${sy(0)} L${sx(0)} ${sy(0)} Z`;
+  const yt=[0,.25,.5,.75,1].map(v=>`<line x1="${L}" x2="${W-R}" y1="${sy(v)}" y2="${sy(v)}" stroke="var(--line)" stroke-width="1"/><text x="${L-6}" y="${sy(v)+4}" text-anchor="end" font-size="11" fill="var(--ink-3)">${v*100}%</text>`).join("");
+  const step=niceStep(X/5);
+  let xt="";for(let n=0;n<=X+1e-9;n+=step)xt+=`<text x="${sx(n)}" y="${H-14}" text-anchor="middle" font-size="11" fill="var(--ink-3)">${fmt(n)}</text>`;
+  const nx=sx(Math.min(r.N,X));
+  const you=r.N>0?`<line x1="${nx}" x2="${nx}" y1="${T}" y2="${sy(0)}" stroke="var(--shu)" stroke-dasharray="4 3"/><circle cx="${nx}" cy="${sy(r.prob)}" r="4.5" fill="var(--shu)"/><text x="${Math.min(nx+6,W-R-60)}" y="${Math.max(sy(r.prob)-8,T+10)}" font-size="12" fill="var(--shu)" font-weight="700">你：${pct(r.prob)}</text>`:"";
+  const ceil=isFinite(r.K)?`<text x="${sx(r.K)-4}" y="${sy(1)+14}" text-anchor="end" font-size="11" fill="var(--kin)">天井</text>`:"";
+  $("#f-chart").innerHTML=`${yt}<path d="${area}" fill="var(--kin-soft)" opacity=".8"/><path d="${line}" fill="none" stroke="var(--kin)" stroke-width="2.2"/>${ceil}${you}${xt}<text x="${L}" y="${H-1}" font-size="11" fill="var(--ink-3)">横轴：锻刀次数</text>`;
+}
+const RN=["木炭","玉鋼","冷却材","砥石"];
+function resText(a,skipZero){if(a.every(v=>Math.round(v)===Math.round(a[0])))return `各 ${fmt(a[0])}`;return a.map((v,i)=>skipZero&&v<=0?"":`${RN[i]} ${fmt(v)}`).filter(Boolean).join(" · ")}
+function niceStep(x){const e=Math.pow(10,Math.floor(Math.log10(Math.max(x,1))));const f=x/e;return (f<=1?1:f<=2?2:f<=5?5:10)*e}
+fFill();forgeRender();
+document.querySelectorAll("#viewForge input").forEach(el=>el.addEventListener("input",forgeRender));
+$("#f-reset").onclick=()=>{const keep={r1:FS.r1,r2:FS.r2,r3:FS.r3,r4:FS.r4,tk:FS.tk,c1:FS.c1,c2:FS.c2,c3:FS.c3,c4:FS.c4,e1:FS.e1,e2:FS.e2,e3:FS.e3,e4:FS.e4};FS=Object.assign({},FDEF,keep);fFill();forgeRender()};
+
+
+// ---------- 锻刀模拟 ----------
+const POOL={
+  tan:["今剣","平野藤四郎","厚藤四郎","後藤藤四郎","信濃藤四郎","前田藤四郎","秋田藤四郎","博多藤四郎","乱藤四郎","五虎退","薬研藤四郎","包丁藤四郎","愛染国俊","太鼓鐘貞宗","小夜左文字","不動行光","毛利藤四郎","謙信景光"],
+  waki:["にっかり青江","鯰尾藤四郎","骨喰藤四郎","物吉貞宗","堀川国広","浦島虎徹"],
+  uchi2:["鳴狐","亀甲貞宗","宗三左文字","加州清光","大和守安定","歌仙兼定","陸奥守吉行","山姥切国広","蜂須賀虎徹","へし切長谷部"],
+  uchi3:["千子村正","和泉守兼定","長曽祢虎徹","大倶利伽羅","同田貫正国"],
+  tachi:["三日月宗近","小狐丸","数珠丸恒次","一期一振","鶯丸","明石国行","燭台切光忠","小竜景光","江雪左文字","山伏国広","髭切","膝丸","獅子王","小烏丸","鶴丸国永","小豆長光"],
+  ootachi:["石切丸","蛍丸","太郎太刀","次郎太刀"],
+  yari:["蜻蛉切","日本号","御手杵"],
+  nagi:["岩融","巴形薙刀","静形薙刀"]
+};
+const FTIME={};
+POOL.tan.forEach(n=>FTIME[n]="0:20");["平野藤四郎","厚藤四郎","謙信景光"].forEach(n=>FTIME[n]="0:30");
+POOL.waki.forEach(n=>FTIME[n]="0:40");POOL.uchi2.forEach(n=>FTIME[n]="1:30");FTIME["へし切長谷部"]="2:30";
+POOL.uchi3.forEach(n=>FTIME[n]="3:00");["明石国行","燭台切光忠","山伏国広","獅子王"].forEach(n=>FTIME[n]="3:00");
+["一期一振","鶯丸","小竜景光","江雪左文字","髭切","膝丸","小烏丸","鶴丸国永","小豆長光"].forEach(n=>FTIME[n]="3:20");
+["三日月宗近","小狐丸","数珠丸恒次"].forEach(n=>FTIME[n]="4:00");
+["石切丸","太郎太刀","次郎太刀"].forEach(n=>FTIME[n]="2:30");FTIME["蛍丸"]="3:00";
+POOL.yari.forEach(n=>FTIME[n]="3:00");POOL.nagi.forEach(n=>FTIME[n]="5:00");
+const T600={"三日月宗近":.56,"小狐丸":.12,"数珠丸恒次":.36,"一期一振":.63,"鶯丸":.36,"明石国行":.59,"小竜景光":.16,"江雪左文字":.75,"髭切":.59,"膝丸":1.07,"小烏丸":.20,"鶴丸国永":.56,"小豆長光":.28};
+const RECIPES=[
+ {id:"tan",name:"短刀　50 / 50 / 50 / 50",n:8577,g:[["tan",99.88,{"平野藤四郎":3.49,"厚藤四郎":3.46,"後藤藤四郎":1.90,"信濃藤四郎":2.03,"博多藤四郎":1.85,"包丁藤四郎":1.96,"太鼓鐘貞宗":2.40,"不動行光":2.61,"毛利藤四郎":1.07,"謙信景光":.35}],["waki",.12,{}]]},
+ {id:"waki",name:"脇差　100 / 400 / 100 / 100",n:675,g:[["waki",98.67,{"浦島虎徹":5.78,"物吉貞宗":2.52}],["tan",1.33,{}]]},
+ {id:"uchi",name:"打刀　100 / 400 / 200 / 50",n:1182,g:[["uchi3",18.2,{"長曽祢虎徹":3.64}],["uchi2",81.63,{"へし切長谷部":3.47,"亀甲貞宗":.85}],["waki",.17,{}]]},
+ {id:"tachi",name:"太刀　600 / 500 / 700 / 700",n:2522,g:[["uchi2",66.30,{"亀甲貞宗":.95}],["uchi3",10.94,{"千子村正":1.47,"長曽祢虎徹":2.85}],["tachi",14.83,T600],["nagi",7.81,{"岩融":3.65,"巴形薙刀":3.85,"静形薙刀":.32}]]},
+ {id:"tachi2",name:"太刀　350 / 510 / 350 / 350",n:1156,g:[["uchi2",70.07,{"亀甲貞宗":.61}],["uchi3",12.28,{"千子村正":1.30,"長曽祢虎徹":2.08}],["tachi",17.13,{"三日月宗近":.69,"小狐丸":.26,"数珠丸恒次":.61,"一期一振":.35,"鶯丸":.61,"明石国行":.69,"小竜景光":.09,"江雪左文字":.87,"髭切":.26,"膝丸":1.04,"小烏丸":.17,"鶴丸国永":1.21,"小豆長光":.09}],["ootachi",.26,{}],["nagi",.17,{}]]},
+ {id:"tachi3",name:"太刀　910 / 910 / 910 / 910",n:231,g:[["uchi2",57.14,{}],["uchi3",11.69,{"千子村正":.87}],["tachi",31.17,{"三日月宗近":1.30,"小狐丸":.43,"数珠丸恒次":0,"一期一振":0,"鶯丸":2.16,"明石国行":1.30,"小竜景光":0,"江雪左文字":.43,"髭切":.43,"膝丸":.87,"小烏丸":0,"鶴丸国永":7.79,"小豆長光":.43}]]},
+ {id:"ootachi",name:"大太刀　530 / 600 / 510 / 510",n:713,g:[["ootachi",15.01,{"石切丸":5.47,"蛍丸":2.10,"太郎太刀":5.33,"次郎太刀":2.10}],["uchi2",59.86,{"亀甲貞宗":1.12}],["uchi3",10.49,{"千子村正":1.12,"長曽祢虎徹":2.66}],["tachi",14.64,{"三日月宗近":.56,"小狐丸":.84,"数珠丸恒次":.28,"一期一振":.84,"鶯丸":0,"明石国行":.28,"小竜景光":0,"江雪左文字":.70,"髭切":.28,"膝丸":.42,"小烏丸":.14,"鶴丸国永":.84,"小豆長光":.42}]],est:true},
+ {id:"yari",name:"槍　590 / 265 / 690 / 690",n:113,g:[["yari",15.93,{"蜻蛉切":6.19,"日本号":1.77,"御手杵":7.96}],["tan",58.85,{"平野藤四郎":3.54,"厚藤四郎":1.77,"後藤藤四郎":0,"信濃藤四郎":1.77,"博多藤四郎":0,"包丁藤四郎":.88,"太鼓鐘貞宗":.88,"不動行光":0,"毛利藤四郎":0,"謙信景光":0}],["waki",25.22,{"浦島虎徹":0,"物吉貞宗":0}]],est:true},
+ {id:"nagi",name:"薙刀　610 / 710 / 810 / 810",n:1052,g:[["nagi",13.12,{"岩融":10.08,"巴形薙刀":2.95,"静形薙刀":.10}],["uchi2",61.19,{"亀甲貞宗":.67}],["uchi3",10.72,{"千子村正":1.52,"長曽祢虎徹":1.81}],["tachi",14.96,{"三日月宗近":.10,"小狐丸":0,"数珠丸恒次":.29,"一期一振":.29,"鶯丸":.19,"明石国行":.38,"小竜景光":0,"江雪左文字":.76,"髭切":.95,"膝丸":.76,"小烏丸":.29,"鶴丸国永":1.05,"小豆長光":.19}]],est:true}
+];
+const RARE=new Set(["三日月宗近","小狐丸","数珠丸恒次","鶴丸国永","一期一振","鶯丸","小竜景光","江雪左文字","髭切","膝丸","小烏丸","小豆長光","蛍丸","日本号","御手杵","蜻蛉切","岩融","巴形薙刀","静形薙刀","謙信景光","毛利藤四郎"]);
+function buildDist(rec){
+  const d={};
+  for(const [cat,T,listed] of rec.g){
+    const pool=POOL[cat];let L=0;const un=[];
+    pool.forEach(n=>{if(n in listed){d[n]=(d[n]||0)+listed[n];L+=listed[n]}else un.push(n)});
+    const rest=Math.max(0,T-L);
+    if(un.length) un.forEach(n=>d[n]=(d[n]||0)+rest/un.length);
+  }
+  const s=Object.values(d).reduce((a,b)=>a+b,0);
+  return Object.entries(d).filter(([,v])=>v>0).map(([n,v])=>[n,v/s]);
+}
+const BYNAME=new Map(BLADES.map(b=>[b.name,b]));
+const recSel=$("#s-rec");
+recSel.innerHTML=RECIPES.map(r=>`<option value="${r.id}">${r.name}</option>`).join("");
+try{const v=localStorage.getItem("touchou-simrec");if(v&&RECIPES.some(r=>r.id===v))recSel.value=v}catch(e){}
+function recInfo(){const r=RECIPES.find(x=>x.id===recSel.value);
+  $("#s-recinfo").textContent=`出现率依据：とうらぶ Wiki 有志集计，共 ${fmt(r.n)} 次报告。`+(r.n<300?"样本较少，偏差可能较大。":"")+(r.est?"部分刀种的占比为推算值。":"")}
+recSel.onchange=()=>{try{localStorage.setItem("touchou-simrec",recSel.value)}catch(e){};recInfo()};
+recInfo();
+function simulate(n){
+  const rec=RECIPES.find(x=>x.id===recSel.value);const dist=buildDist(rec);
+  const cum=[];let c=0;for(const [nm,pr] of dist){c+=pr;cum.push([nm,c])}
+  const seq=[];const cnt={};
+  for(let i=0;i<n;i++){const r=Math.random();let nm=cum[cum.length-1][0];for(const [x,cv] of cum){if(r<cv){nm=x;break}}cnt[nm]=(cnt[nm]||0)+1;seq.push(nm)}
+  renderSim(rec,n,seq,cnt,new Map(dist));
+}
+function renderSim(rec,n,seq,cnt,prob,lim){
+  const isNew=nm=>{const b=BYNAME.get(nm);return b&&!state[b.no]};
+  const typeOf=nm=>(BYNAME.get(nm)||{type:"限锻"}).type;
+  const isLim=nm=>lim&&nm===lim.tgt.name;
+  const typeCnt={};for(const [nm,k] of Object.entries(cnt)){const t=typeOf(nm);typeCnt[t]=(typeCnt[t]||0)+k}
+  const newOnes=Object.keys(cnt).filter(isNew);
+  const rows=Object.entries(cnt).sort((a,b)=>(isLim(b[0])-isLim(a[0]))||b[1]-a[1]||((BYNAME.get(a[0])||{no:999}).no-(BYNAME.get(b[0])||{no:999}).no));
+  let limBox="";
+  if(lim){
+    const total=lim.hit+lim.ceilHits.length;
+    const firstTxt=lim.first>0?`第 ${fmt(lim.first)} 次锻出`:lim.first<0?`靠天井在第 ${fmt(-lim.first)} 次拿到`:"这次没有拿到";
+    limBox=`<div class="res-hero" style="margin-top:4px">
+      <div class="stat ${total?"ok":"warn"}"><b>${fmt(total)}</b><span>拿到${esc(lim.tgt.name)}的振数</span></div>
+      <div class="stat"><b style="font-size:20px">${firstTxt}</b><span>第一次拿到</span></div>
+      <div class="stat"><b>${lim.ceil>0?fmt(lim.pts):"—"}</b><span>${lim.ceil>0?`剩余顕現ポイント（天井 ${fmt(lim.ceil)}）`:"不计天井"}</span></div>
+    </div>
+    <p class="msg">锻出 ${fmt(lim.hit)} 振${lim.ceilHits.length?`，天井送出 ${lim.ceilHits.length} 振（第 ${lim.ceilHits.map(fmt).join("、")} 次时攒满）`:""}。按 ${(lim.p*100).toFixed(2)}% 出货率、每次 ${lim.pt} pt 计算。</p>`;
+  }
+  $("#s-out").innerHTML=`
+    <h2>${lim?"限时锻刀":"锻刀"}结果 · ${fmt(n)} 次</h2>
+    <p class="sub">配方：${rec.name.replace("　"," ")}。共锻出 ${rows.length} 种刀剑男士${newOnes.length?`，其中 <b style="color:var(--shu)">${newOnes.length}</b> 种是你刀帐里还没有的`:""}。</p>
+    ${limBox}
+    <div class="typebars">${TYPES.concat(["限锻"]).filter(t=>typeCnt[t]&&!(lim&&t==="限锻")).map(t=>`<div class="tb"><div class="l"><b>${t}</b><span>${fmt(typeCnt[t])}</span></div><div class="bar"><i style="width:${typeCnt[t]/n*100}%"></i></div></div>`).join("")}</div>
+    <div class="sec">锻刀记录</div>
+    <div class="logbar">
+      <div class="seg" role="group" aria-label="记录筛选"><button type="button" data-lf="all" aria-pressed="true">全部</button><button type="button" data-lf="rare" aria-pressed="false">只看稀有${lim?"和限锻":""}</button><button type="button" data-lf="new" aria-pressed="false">只看未入手</button></div>
+      <span class="msg" id="s-logcount"></span>
+    </div>
+    <div class="seq" id="s-log"></div>
+    <button class="ghost" id="s-more" type="button" hidden>再显示 200 条</button>
+    <div class="seq" hidden>${seq.slice(0,0).map(nm=>`<span class="chip${RARE.has(nm)||isLim(nm)?" rare":""}${isNew(nm)?" new":""}"${isLim(nm)?' style="background:var(--shu);border-color:var(--shu);color:#fff"':""}><b>${esc(nm)}</b><small>${FTIME[nm]||""}</small></span>`).join("")}</div>
+    <div class="sec" style="margin-top:16px">统计</div>
+    <div class="tablewrap"><table class="restab"><thead><tr><th>刀剑男士</th><th>刀种</th><th class="num">锻刀时间</th><th class="num">次数</th><th class="num">参考出现率</th></tr></thead><tbody>
+    ${rows.map(([nm,k])=>{return `<tr${isLim(nm)?' style="background:var(--sakura-soft)"':""}><td><span class="nm">${esc(nm)}</span>${isLim(nm)?'<span class="tag new" style="background:var(--kin)">限锻</span>':""}${isNew(nm)?'<span class="tag new">未入手</span>':""}${RARE.has(nm)?'<span class="tag rare">稀有</span>':""}</td><td>${typeOf(nm)}</td><td class="num">${FTIME[nm]||""}</td><td class="num">${fmt(k)}</td><td class="num">${((prob.get(nm)||0)*100).toFixed(2)}%</td></tr>`}).join("")}
+    </tbody></table></div>
+    <p class="note">「未入手」按你在刀帐页的记录判断。参考出现率来自玩家集计：表里单独统计过的刀用统计值，没有单独统计的刀按同组平均分配，所以只是近似。实际游戏的出现率官方没有公布。模拟结果不会写入你的刀帐。</p>`;
+  const chip=(nm,i)=>`<span class="chip${RARE.has(nm)||isLim(nm)?" rare":""}${isNew(nm)?" new":""}"${isLim(nm)?' style="background:var(--shu);border-color:var(--shu);color:#fff"':""}><small class="ix">#${i+1}</small><b>${esc(nm)}</b><small>${FTIME[nm]||""}</small></span>`;
+  let lf="all",shown=0,list=[];
+  const draw=reset=>{
+    if(reset){shown=0;list=seq.map((nm,i)=>[nm,i]).filter(([nm])=>lf==="all"||(lf==="rare"&&(RARE.has(nm)||isLim(nm)))||(lf==="new"&&isNew(nm)));$("#s-log").innerHTML=""}
+    const add=list.slice(shown,shown+(shown?200:100));shown+=add.length;
+    $("#s-log").insertAdjacentHTML("beforeend",add.map(([nm,i])=>chip(nm,i)).join(""));
+    $("#s-logcount").textContent=list.length?`显示 ${fmt(shown)} / ${fmt(list.length)} 条`:"没有符合条件的记录";
+    $("#s-more").hidden=shown>=list.length;
+  };
+  draw(true);
+  $("#s-more").onclick=()=>draw(false);
+  document.querySelectorAll("#s-out .logbar .seg button").forEach(b=>b.onclick=()=>{lf=b.dataset.lf;document.querySelectorAll("#s-out .logbar .seg button").forEach(x=>x.setAttribute("aria-pressed",x===b));draw(true)});
+}
+$("#s-go").onclick=()=>{let n=Math.floor(parseFloat($("#s-n").value)||0);n=Math.max(1,Math.min(10000,n));$("#s-n").value=n;simMode==="limited"?simulateLimited(n):simulate(n)};
+document.querySelectorAll(".quick .ghost").forEach(b=>b.onclick=()=>{$("#s-n").value=b.dataset.n;$("#s-go").click()});
+
+// ---------- 限时锻刀 ----------
+const LIMITED=[
+  {name:"朝倉藤四郎",when:"2026年10月13日 – 10月27日",time:""},
+  {name:"三郎国宗",when:"2025年11月首次登场，2026年6月复刻",time:"3:00"},
+  {name:"柏太刀",when:"2026年4月21日 – 5月7日",time:"2:30"},
+  {name:"二筋樋貞宗",when:"2026年1月14日 – 1月27日",time:"1:11"},
+  {name:"面影",when:"2025年4月22日 – 5月7日",time:""},
+  {name:"孫六兼元",when:"2023年10月",time:"3:00"}
+];
+const CHARM_PT=[5,10,15,20,60];
+let simMode="normal";
+$("#s-lim").innerHTML=LIMITED.map((l,i)=>`<option value="${i}">${l.name}</option>`).join("")+`<option value="custom">自定义…</option>`;
+$("#s-bladelist").innerHTML=BLADES.map(b=>`<option value="${esc(b.name)}"></option>`).join("");
+function limInfo(){
+  const v=$("#s-lim").value;$("#s-customwrap").hidden=v!=="custom";
+  $("#s-liminfo").textContent=v==="custom"?"自定义一把想模拟的刀":`${LIMITED[v].when}${LIMITED[v].time?" · 锻刀时间 "+LIMITED[v].time:""}`;
+}
+$("#s-lim").onchange=limInfo;limInfo();
+document.querySelectorAll('#viewSim .seg button').forEach(b=>b.onclick=()=>{
+  simMode=b.dataset.mode;document.querySelectorAll('#viewSim .seg button').forEach(x=>x.setAttribute("aria-pressed",x===b));
+  $("#s-limbox").hidden=simMode!=="limited";$("#s-recwrap").hidden=simMode==="limited";
+  $("#s-recinfo").textContent=simMode==="limited"?"限时锻刀固定用各资源 700。除了限锻刀以外的结果，因为没有 all700 的统计，暂用太刀配方 600/500/700/700 的出现率近似。":"";
+  if(simMode==="normal")recInfo();
+});
+function limitedTarget(){
+  const v=$("#s-lim").value;
+  if(v!=="custom")return {name:LIMITED[v].name,time:LIMITED[v].time};
+  const nm=$("#s-custom").value.trim();return nm?{name:nm,time:""}:null;
+}
+function simulateLimited(n){
+  const tgt=limitedTarget();if(!tgt){$("#s-out").innerHTML='<p class="msg">请先选择或输入一把限锻刀。</p>';return}
+  const p=Math.min(1,Math.max(0,(parseFloat($("#s-p").value)||0)/100));
+  const pt=CHARM_PT[+$("#s-charm").value], ceil=Math.max(0,parseFloat($("#s-ceil").value)||0);
+  const base=buildDist(RECIPES.find(r=>r.id==="tachi"));
+  const cum=[];let c=0;for(const [nm,pr] of base){c+=pr;cum.push([nm,c])}
+  const seq=[],cnt={};let hit=0,first=0,pts=0,ceilHits=[];
+  for(let i=1;i<=n;i++){
+    let nm;
+    if(Math.random()<p){nm=tgt.name;hit++;if(!first)first=i}
+    else{const r=Math.random();nm=cum[cum.length-1][0];for(const [x,cv] of cum){if(r<cv){nm=x;break}}}
+    cnt[nm]=(cnt[nm]||0)+1;seq.push(nm);
+    if(ceil>0){pts+=pt;if(pts>=ceil){pts-=ceil;ceilHits.push(i);if(!first)first=-i}}
+  }
+  const prob=new Map(base.map(([a,b])=>[a,b*(1-p)]));prob.set(tgt.name,p);
+  if(tgt.time)FTIME[tgt.name]=tgt.time;
+  renderSim({name:"限时锻刀　700 / 700 / 700 / 700"},n,seq,cnt,prob,{tgt,hit,first,ceilHits,pts,ceil,pt,p});
+}
+// ---------- 页面切换 ----------
+const VIEWS={book:["#viewBook","#tabBook",""],forge:["#viewForge","#tabForge","#forge"],sim:["#viewSim","#tabSim","#sim"]};
+function showView(v){
+  if(!VIEWS[v])v="book";
+  for(const [k,[sec,tab]] of Object.entries(VIEWS)){$(sec).hidden=k!==v;$(tab).setAttribute("aria-selected",k===v)}
+}
+function setHash(hs){try{history.replaceState(null,"",hs||location.pathname+location.search)}catch(e){}}
+for(const [k,[,tab,hs]] of Object.entries(VIEWS)) $(tab).onclick=()=>{setHash(hs);showView(k)};
+const fromHash=()=>({"#forge":"forge","#sim":"sim"}[location.hash]||"book");
+addEventListener("hashchange",()=>showView(fromHash()));
+showView(fromHash());
+
+initStore();
+</script>
+
+</body>
+</html>
